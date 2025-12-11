@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Renaldo - Principal Data Scientist & ML Architect. Building intelligent systems that transform raw data into strategic decisions.">
+    <meta name="theme-color" content="#030712">
+    
+    <title>Renaldo | Data Scientist & ML Architect</title>
+    
+    <!-- Preload Critical Assets -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Three.js for 3D -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Renaldo",
+        "jobTitle": "Data Scientist & ML Architect",
+        "url": "https://renaldo.ai"
+    }
+    </script>
+</head>
+<body>
+    <!-- === ATMOSPHERIC LAYER SYSTEM === -->
+    <div class="atmosphere-system" aria-hidden="true">
+        <div class="atmo-gradient"></div>
+        <div class="atmo-noise"></div>
+        <div class="atmo-grid"></div>
+        <canvas id="neural-field"></canvas>
+        <div class="atmo-vignette"></div>
+    </div>
+
+    <!-- === CURSOR FOLLOWER === -->
+    <div class="cursor-glow" id="cursor-glow"></div>
+
+    <!-- === NAVIGATION === -->
+    <header class="nav-header" id="nav-header">
+        <nav class="nav-inner">
+            <a href="#hero" class="brand">
+                <div class="brand-mark">
+                    <svg viewBox="0 0 40 40" class="brand-svg">
+                        <circle cx="20" cy="20" r="18" class="brand-ring"/>
+                        <circle cx="20" cy="20" r="6" class="brand-core"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-name">RENALDO ARAPI</span>
+                    <span class="brand-domain">.AI</span>
+                </div>
+            </a>
+            
+            <ul class="nav-menu">
+                <li><a href="#hero" class="nav-item active" data-idx="01">Origin</a></li>
+                <li><a href="#about" class="nav-item" data-idx="02">Nexus</a></li>
+                <li><a href="#skills" class="nav-item" data-idx="03">Arsenal</a></li>
+                <li><a href="#projects" class="nav-item" data-idx="04">Deployments</a></li>
+                <li><a href="#contact" class="nav-item" data-idx="05">Interface</a></li>
+            </ul>
+            
+            <div class="nav-meta">
+                <div class="system-status">
+                    <span class="pulse-dot"></span>
+                    <span class="status-label">Neural Link Active</span>
+                </div>
+                <div class="depth-indicator" id="depth-indicator">
+                    <svg viewBox="0 0 36 36" class="depth-ring">
+                        <circle cx="18" cy="18" r="16" class="depth-track"/>
+                        <circle cx="18" cy="18" r="16" class="depth-progress" id="depth-progress"/>
+                    </svg>
+                    <span class="depth-value" id="depth-value">1</span>
+                </div>
+            </div>
+        </nav>
+        <div class="scroll-indicator" id="scroll-indicator"></div>
+    </header>
+
+    <!-- === MAIN CONTENT === -->
+    <main>
+        <!-- HERO COSMOS -->
+        <section class="hero" id="hero">
+            <div class="hero-cosmos" id="hero-cosmos">
+                <!-- Three.js Orbital System -->
+            </div>
+            
+            <div class="hero-content">
+                <div class="hero-badge" data-reveal>
+                    <span class="badge-pulse"></span>
+                    <span class="badge-label">Data Scientist & ML Engineer</span>
+                </div>
+                
+                <h1 class="hero-title" data-reveal>
+                    <span class="title-line">Engineering</span>
+                    <span class="title-line gradient-text">Intelligence</span>
+                    <span class="title-line">at Scale.</span>
+                </h1>
+                
+                <p class="hero-lead" data-reveal>
+                    Transforming petabytes into patterns. Building predictive systems 
+                    that don't just analyze—they <em>anticipate</em>.
+                </p>
+                
+                <div class="hero-actions" data-reveal>
+                    <a href="#projects" class="btn btn-plasma">
+                        <span class="btn-text">View Deployments</span>
+                        <span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span>
+                        <span class="btn-shine"></span>
+                    </a>
+                    <a href="#contact" class="btn btn-ghost">
+                        <span class="btn-text">Initialize Contact</span>
+                        <span class="btn-border"></span>
+                    </a>
+                </div>
+                
+                <!-- Hero Metrics Dashboard -->
+                <div class="hero-dashboard" data-reveal>
+                    <div class="dash-stat">
+                        <div class="stat-visual">
+                            <svg viewBox="0 0 100 100" class="stat-arc">
+                                <circle cx="50" cy="50" r="45" class="arc-track"/>
+                                <circle cx="50" cy="50" r="45" class="arc-fill" data-value="98"/>
+                            </svg>
+                            <span class="stat-num" data-count="98">0</span>
+                        </div>
+                        <span class="stat-label">Accuracy %</span>
+                    </div>
+                    <div class="dash-divider"></div>
+                    <div class="dash-stat">
+                        <div class="stat-visual">
+                            <svg viewBox="0 0 100 100" class="stat-arc">
+                                <circle cx="50" cy="50" r="45" class="arc-track"/>
+                                <circle cx="50" cy="50" r="45" class="arc-fill" data-value="24"/>
+                            </svg>
+                            <span class="stat-num" data-count="24">0</span>
+                        </div>
+                        <span class="stat-label">Models Live</span>
+                    </div>
+                    <div class="dash-divider"></div>
+                    <div class="dash-stat">
+                        <div class="stat-visual">
+                            <svg viewBox="0 0 100 100" class="stat-arc">
+                                <circle cx="50" cy="50" r="45" class="arc-track"/>
+                                <circle cx="50" cy="50" r="45" class="arc-fill" data-value="85"/>
+                            </svg>
+                            <span class="stat-num" data-count="2.4">0</span>
+                        </div>
+                        <span class="stat-label">TB Processed</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Floating Context Cards -->
+            <div class="hero-floaters">
+                <div class="floater floater-1 glass-card">
+                    <i class="fa-brands fa-python"></i>
+                    <div class="floater-info">
+                        <strong>Python</strong>
+                        <small>Primary Stack</small>
+                    </div>
+                </div>
+                <div class="floater floater-2 glass-card">
+                    <div class="floater-pulse"></div>
+                    <span>Model Training...</span>
+                    <div class="floater-bar"><span></span></div>
+                </div>
+                <div class="floater floater-3 glass-card">
+                    <i class="fa-solid fa-microchip"></i>
+                    <div class="floater-info">
+                        <strong>GPU Cluster</strong>
+                        <small>Active</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="scroll-cue">
+                <span>Scroll to Explore</span>
+                <div class="scroll-arrow">
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT / NEXUS -->
+        <section class="section about-section" id="about">
+            <div class="container">
+                <div class="about-grid">
+                    <div class="about-visual" data-parallax>
+                        <div class="visual-frame">
+                            <img src="assets/scienziato-pazzo.jpg" alt="Renaldo" class="profile-image">
+                            <div class="frame-scan"></div>
+                            <div class="frame-corners">
+                                <span></span><span></span><span></span><span></span>
+                            </div>
+                        </div>
+                        <div class="visual-tag glass-card">
+                            <span class="tag-dot"></span>
+                            <span>Available for Projects</span>
+                        </div>
+                    </div>
+                    
+                    <div class="about-content">
+                        <div class="section-tag" data-reveal>
+                            <span class="tag-line"></span>
+                            <span>The Architect</span>
+                        </div>
+                        <h2 class="section-title" data-reveal>
+                            Beyond Algorithms—<br>
+                            <span class="gradient-text">Strategic Intelligence</span>
+                        </h2>
+                        <p class="about-lead" data-reveal>
+                            Holding a <strong>Master in Statistics</strong> from <strong>Alma Mater Studiorum - Bologna</strong> (the oldest university in the world), 
+                            I combine rigorous academic foundation with modern engineering to build systems that don't just predict, but understand.
+                        </p>
+                        
+                        <div class="competence-grid" data-reveal>
+                            <div class="competence-card">
+                                <div class="comp-icon">
+                                    <i class="fa-solid fa-diagram-project"></i>
+                                </div>
+                                <h4>Pattern Architecture</h4>
+                                <p>Uncovering latent structures in high-dimensional feature spaces.</p>
+                            </div>
+                            <div class="competence-card">
+                                <div class="comp-icon">
+                                    <i class="fa-solid fa-server"></i>
+                                </div>
+                                <h4>MLOps Pipeline</h4>
+                                <p>End-to-end deployment from research to production inference.</p>
+                            </div>
+                            <div class="competence-card">
+                                <div class="comp-icon">
+                                    <i class="fa-solid fa-chart-mixed"></i>
+                                </div>
+                                <h4>Insight Translation</h4>
+                                <p>Converting model outputs into executive-level narratives.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SKILLS / ARSENAL -->
+        <section class="section skills-section" id="skills">
+            <div class="container">
+                <div class="section-header center" data-reveal>
+                    <div class="section-tag">
+                        <span class="tag-line"></span>
+                        <span>Technical Arsenal</span>
+                    </div>
+                    <h2 class="section-title">Full-Spectrum Capabilities</h2>
+                </div>
+                
+                <div class="skills-constellation">
+                    <!-- Central Node -->
+                    <div class="constellation-core">
+                        <div class="core-ring"></div>
+                        <div class="core-label">DATA<br>SCIENCE</div>
+                    </div>
+                    
+                    <!-- Skill Nodes -->
+                    <div class="skill-orbit orbit-1">
+                        <div class="skill-node" data-skill="python" data-level="95">
+                            <div class="node-glow"></div>
+                            <i class="fa-brands fa-python"></i>
+                            <span class="node-label">Python</span>
+                            <span class="node-level">95%</span>
+                        </div>
+                        <div class="skill-node" data-skill="tensorflow" data-level="88">
+                            <div class="node-glow"></div>
+                            <i class="fa-solid fa-brain"></i>
+                            <span class="node-label">TensorFlow</span>
+                            <span class="node-level">88%</span>
+                        </div>
+                        <div class="skill-node" data-skill="sql" data-level="90">
+                            <div class="node-glow"></div>
+                            <i class="fa-solid fa-database"></i>
+                            <span class="node-label">SQL</span>
+                            <span class="node-level">90%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-orbit orbit-2">
+                        <div class="skill-node" data-skill="pandas" data-level="96">
+                            <div class="node-glow"></div>
+                            <i class="fa-solid fa-table"></i>
+                            <span class="node-label">Pandas</span>
+                            <span class="node-level">96%</span>
+                        </div>
+                        <div class="skill-node" data-skill="sklearn" data-level="92">
+                            <div class="node-glow"></div>
+                            <i class="fa-solid fa-gears"></i>
+                            <span class="node-label">Scikit-Learn</span>
+                            <span class="node-level">92%</span>
+                        </div>
+                        <div class="skill-node" data-skill="pytorch" data-level="82">
+                            <div class="node-glow"></div>
+                            <i class="fa-solid fa-fire"></i>
+                            <span class="node-label">PyTorch</span>
+                            <span class="node-level">82%</span>
+                        </div>
+                        <div class="skill-node" data-skill="viz" data-level="89">
+                            <div class="node-glow"></div>
+                            <i class="fa-solid fa-chart-pie"></i>
+                            <span class="node-label">Visualization</span>
+                            <span class="node-level">89%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Skills Detail Cards -->
+                <div class="skills-detail-grid">
+                    <div class="skill-detail glass-card" data-tilt>
+                        <div class="detail-header">
+                            <i class="fa-solid fa-microchip"></i>
+                            <h3>Machine Learning</h3>
+                        </div>
+                        <div class="detail-bars">
+                            <div class="bar-item">
+                                <div class="bar-meta"><span>Classification</span><span>94%</span></div>
+                                <div class="bar-track"><div class="bar-fill" data-width="94"></div></div>
+                            </div>
+                            <div class="bar-item">
+                                <div class="bar-meta"><span>Regression</span><span>91%</span></div>
+                                <div class="bar-track"><div class="bar-fill" data-width="91"></div></div>
+                            </div>
+                            <div class="bar-item">
+                                <div class="bar-meta"><span>Clustering</span><span>87%</span></div>
+                                <div class="bar-track"><div class="bar-fill" data-width="87"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-detail glass-card" data-tilt>
+                        <div class="detail-header">
+                            <i class="fa-solid fa-chart-line"></i>
+                            <h3>Statistics</h3>
+                        </div>
+                        <div class="detail-bars">
+                            <div class="bar-item">
+                                <div class="bar-meta"><span>Hypothesis Testing</span><span>96%</span></div>
+                                <div class="bar-track"><div class="bar-fill" data-width="96"></div></div>
+                            </div>
+                            <div class="bar-item">
+                                <div class="bar-meta"><span>Bayesian Methods</span><span>84%</span></div>
+                                <div class="bar-track"><div class="bar-fill" data-width="84"></div></div>
+                            </div>
+                            <div class="bar-item">
+                                <div class="bar-meta"><span>Time Series</span><span>89%</span></div>
+                                <div class="bar-track"><div class="bar-fill" data-width="89"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS / DEPLOYMENTS -->
+        <section class="section projects-section" id="projects">
+            <div class="container">
+                <div class="section-header" data-reveal>
+                    <div class="section-tag">
+                        <span class="tag-line"></span>
+                        <span>Deployments</span>
+                    </div>
+                    <h2 class="section-title">Intelligence in Production</h2>
+                </div>
+                
+                <div class="projects-showcase">
+                    <!-- Project 1 -->
+                    <article class="project-card" data-project="forecast" data-tilt>
+                        <div class="project-visual">
+                            <div class="visual-bg">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <div class="visual-overlay"></div>
+                            <div class="project-tags">
+                                <span>Time Series</span>
+                                <span>ARIMA</span>
+                                <span>Prophet</span>
+                            </div>
+                        </div>
+                        <div class="project-body">
+                            <h3>Sales Trend Forecasting</h3>
+                            <p>Predictive engine for retail optimization. Seasonal decomposition with 94% accuracy on Q4 projections.</p>
+                            <div class="project-kpis">
+                                <div class="kpi">
+                                    <span class="kpi-val">94%</span>
+                                    <span class="kpi-label">Accuracy</span>
+                                </div>
+                                <div class="kpi">
+                                    <span class="kpi-val">$2.1M</span>
+                                    <span class="kpi-label">Impact</span>
+                                </div>
+                            </div>
+                            <a href="#" class="project-link">
+                                Deep Dive <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </article>
+                    
+                    <!-- Project 2 -->
+                    <article class="project-card" data-project="churn" data-tilt>
+                        <div class="project-visual">
+                            <div class="visual-bg">
+                                <i class="fa-solid fa-users-viewfinder"></i>
+                            </div>
+                            <div class="visual-overlay"></div>
+                            <div class="project-tags">
+                                <span>Classification</span>
+                                <span>XGBoost</span>
+                                <span>SHAP</span>
+                            </div>
+                        </div>
+                        <div class="project-body">
+                            <h3>Churn Prediction Engine</h3>
+                            <p>Proactive retention system analyzing 50k+ customer signals. Feature importance via SHAP analysis.</p>
+                            <div class="project-kpis">
+                                <div class="kpi">
+                                    <span class="kpi-val">82%</span>
+                                    <span class="kpi-label">Precision</span>
+                                </div>
+                                <div class="kpi">
+                                    <span class="kpi-val">-23%</span>
+                                    <span class="kpi-label">Churn Rate</span>
+                                </div>
+                            </div>
+                            <a href="#" class="project-link">
+                                Deep Dive <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </article>
+                    
+                    <!-- Project 3 -->
+                    <article class="project-card" data-project="vision" data-tilt>
+                        <div class="project-visual">
+                            <div class="visual-bg">
+                                <i class="fa-solid fa-eye"></i>
+                            </div>
+                            <div class="visual-overlay"></div>
+                            <div class="project-tags">
+                                <span>CNN</span>
+                                <span>Computer Vision</span>
+                                <span>NumPy</span>
+                            </div>
+                        </div>
+                        <div class="project-body">
+                            <h3>MNIST From Scratch</h3>
+                            <p>Neural network implementation without frameworks. Mastering backpropagation mathematics firsthand.</p>
+                            <div class="project-kpis">
+                                <div class="kpi">
+                                    <span class="kpi-val">96%</span>
+                                    <span class="kpi-label">Accuracy</span>
+                                </div>
+                                <div class="kpi">
+                                    <span class="kpi-val">60k</span>
+                                    <span class="kpi-label">Samples</span>
+                                </div>
+                            </div>
+                            <a href="#" class="project-link">
+                                Deep Dive <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT / INTERFACE -->
+        <section class="section contact-section" id="contact">
+            <div class="container">
+                <div class="contact-layout">
+                    <!-- Terminal Window -->
+                    <div class="terminal-window" id="terminal">
+                        <div class="terminal-bar">
+                            <div class="bar-dots">
+                                <span class="dot red"></span>
+                                <span class="dot yellow"></span>
+                                <span class="dot green"></span>
+                            </div>
+                            <span class="bar-title">renaldo_interface.py</span>
+                        </div>
+                        <div class="terminal-content" id="terminal-content">
+                            <div class="terminal-line">
+                                <span class="prompt">$</span> python knowledge_check.py
+                            </div>
+                            <div class="terminal-line">
+                                <span class="output">[INFO] Neural handshake initiated...</span>
+                            </div>
+                            <div class="terminal-line">
+                                <span class="output success">[SUCCESS] Connection established.</span>
+                            </div>
+                            <div class="quiz-container" id="quiz-container">
+                                <div class="quiz-prompt" id="quiz-prompt">
+                                    Ready to test your ML knowledge?
+                                </div>
+                                <div class="quiz-options" id="quiz-options">
+                                    <button class="quiz-btn" id="start-quiz">INITIALIZE PROTOCOL</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Cards -->
+                    <div class="contact-cards">
+                        <div class="contact-main glass-card">
+                            <div class="contact-icon">
+                                <i class="fa-solid fa-satellite-dish"></i>
+                            </div>
+                            <h3>Open for Transmission</h3>
+                            <p>Seeking Data Science roles and challenging ML projects. Let's build something intelligent together.</p>
+                            <a href="mailto:renaldo@example.com" class="btn btn-plasma">
+                                <span class="btn-text">renaldo@example.com</span>
+                                <span class="btn-shine"></span>
+                            </a>
+                        </div>
+                        
+                        <div class="social-grid">
+                            <a href="#" class="social-btn" title="GitHub">
+                                <i class="fa-brands fa-github"></i>
+                            </a>
+                            <a href="#" class="social-btn" title="LinkedIn">
+                                <i class="fa-brands fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="social-btn" title="Twitter">
+                                <i class="fa-brands fa-twitter"></i>
+                            </a>
+                            <a href="#" class="social-btn" title="Kaggle">
+                                <i class="fa-brands fa-kaggle"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- === FOOTER === -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">RENALDO ARAPI<span class="gradient-text">.AI</span></div>
+                <div class="footer-status">
+                    <span class="pulse-dot"></span>
+                    <span>All Systems Operational</span>
+                </div>
+                <div class="footer-copy">&copy; 2025. Engineered with precision.</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- === ACHIEVEMENT TOAST === -->
+    <div class="achievement-toast" id="achievement-toast">
+        <div class="toast-icon"><i class="fa-solid fa-trophy"></i></div>
+        <div class="toast-content">
+            <strong id="toast-title">Achievement Unlocked</strong>
+            <span id="toast-desc">Description</span>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
