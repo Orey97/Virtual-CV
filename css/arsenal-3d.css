@@ -24,9 +24,9 @@
     position: relative;
     width: 100%;
     height: 850px; /* Fixed height for dashboard feel */
-    /* background: var(--as-bg); Replaced by Global Solar System */
-    background: rgba(3, 5, 8, 0.3);
-    backdrop-filter: blur(8px);
+    /* background: var(--as-bg); Replaced by Global Latent Space */
+    background: rgba(3, 5, 8, 0.1); /* Increased transparency for latent space visibility */
+    backdrop-filter: blur(4px); /* Reduced blur for clarity of background */
     border: 1px solid var(--as-border);
     border-radius: 16px;
     overflow: hidden;
