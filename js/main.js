@@ -90,23 +90,22 @@ const UI = {
 };
 
 // ============================================
-// THREE.JS COSMOS (Hero 3D Scene)
+// SYSTEM LATTICE (Global Background)
+// A depth-encoded signal environment.
+// Represents continuous intelligence and stable reference points.
 // ============================================
-// HeroCosmos removed - replaced by Global Solar System (js/bg-cosmos.js)
-
-// ============================================
-// NEURAL FIELD (Background Canvas)
-// ============================================
-class NeuralField {
+class SystemLattice {
     constructor() {
         this.canvas = document.getElementById('neural-field');
         if (!this.canvas) return;
         
-        this.ctx = this.canvas.getContext('2d');
+        this.ctx = this.canvas.getContext('2d', { alpha: true });
         this.nodes = [];
-        this.connections = [];
         this.width = 0;
         this.height = 0;
+        this.scrollY = 0;
+        this.mouseX = 0;
+        this.mouseY = 0;
         
         this.init();
     }
@@ -114,9 +113,17 @@ class NeuralField {
     init() {
         this.resize();
         this.createNodes();
-        this.animate();
         
         window.addEventListener('resize', () => this.resize());
+        window.addEventListener('scroll', () => {
+            this.scrollY = window.scrollY;
+        });
+        window.addEventListener('mousemove', (e) => {
+            this.mouseX = e.clientX;
+            this.mouseY = e.clientY;
+        });
+
+        this.animate();
     }
     
     resize() {
@@ -124,69 +131,74 @@ class NeuralField {
         this.height = window.innerHeight;
         this.canvas.width = this.width;
         this.canvas.height = this.height;
+        // Re-initialize signal field
+        this.createNodes();
     }
     
     createNodes() {
-        const count = Math.min(80, Math.floor(this.width / 25));
+        // Density: "Sparse but intentional"
+        // Reduced count to ensure calm, instrument-grade atmosphere
+        const nodeCount = Math.min(250, Math.floor(this.width / 3));
         this.nodes = [];
         
-        for (let i = 0; i < count; i++) {
+        for (let i = 0; i < nodeCount; i++) {
             this.nodes.push({
                 x: Math.random() * this.width,
                 y: Math.random() * this.height,
-                vx: (Math.random() - 0.5) * 0.3,
-                vy: (Math.random() - 0.5) * 0.3,
-                radius: Math.random() * 2 + 1,
+                z: Math.random() * 2 + 0.5, // Depth Z-Index
+                size: Math.random() * 1.5,
+                baseAlpha: Math.random() * 0.4 + 0.2, // Lower opacity for subtlety
+                pulseSpeed: Math.random() * 0.02 + 0.005, // Very slow pulse
                 pulseOffset: Math.random() * Math.PI * 2
             });
         }
     }
     
     animate() {
+        if (!this.ctx) return;
+
         this.ctx.clearRect(0, 0, this.width, this.height);
         
         const time = Date.now() * 0.001;
         
-        // Update and draw nodes
-        this.nodes.forEach((node, i) => {
-            // Update position
-            node.x += node.vx;
-            node.y += node.vy;
+        // Motion: Primary is Autonomous Drift.
+        // User influence is <= 20% (extremely subtle).
+
+        const parallaxY = -this.scrollY * 0.15; // Reduced vertical parallax
+        // Damped user influence
+        const mouseParallaxX = (this.mouseX - this.width / 2) * 0.005;
+        const mouseParallaxY = (this.mouseY - this.height / 2) * 0.005;
+
+        this.nodes.forEach(node => {
+            // Autonomous Drift: Constant, slow, predictable.
+            // Direction: Positive X (Left to Right) to suggest forward flow/data stream.
+            node.x += 0.08 * node.z;
             
-            // Bounce off edges
-            if (node.x < 0 || node.x > this.width) node.vx *= -1;
-            if (node.y < 0 || node.y > this.height) node.vy *= -1;
+            // Calculate Render Position
+            let x = node.x - mouseParallaxX * node.z;
+            let y = node.y + (parallaxY * node.z) - (mouseParallaxY * node.z);
             
-            // Keep in bounds
-            node.x = Math.max(0, Math.min(this.width, node.x));
-            node.y = Math.max(0, Math.min(this.height, node.y));
+            // Infinite Field Wrapping
             
-            // Pulse effect
-            const pulse = Math.sin(time * 2 + node.pulseOffset) * 0.3 + 0.7;
+            // X Wrap
+            const virtualX = (x % this.width);
+            const actualX = virtualX < 0 ? virtualX + this.width : virtualX;
+
+            // Y Wrap
+            const virtualY = (y % this.height);
+            const actualY = virtualY < 0 ? virtualY + this.height : virtualY;
             
-            // Draw node
+            // Render Signal Node
             this.ctx.beginPath();
-            this.ctx.arc(node.x, node.y, node.radius * pulse, 0, Math.PI * 2);
-            this.ctx.fillStyle = `rgba(59, 130, 246, ${0.4 * pulse})`;
-            this.ctx.fill();
             
-            // Draw connections
-            for (let j = i + 1; j < this.nodes.length; j++) {
-                const other = this.nodes[j];
-                const dx = node.x - other.x;
-                const dy = node.y - other.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                
-                if (dist < 150) {
-                    const opacity = (1 - dist / 150) * 0.15;
-                    this.ctx.beginPath();
-                    this.ctx.moveTo(node.x, node.y);
-                    this.ctx.lineTo(other.x, other.y);
-                    this.ctx.strokeStyle = `rgba(59, 130, 246, ${opacity})`;
-                    this.ctx.lineWidth = 1;
-                    this.ctx.stroke();
-                }
-            }
+            // Pulse: Slow, rhythmic signal variation
+            const pulse = Math.sin(time + node.pulseOffset);
+            const opacity = node.baseAlpha + (pulse * 0.1);
+            const finalOpacity = Math.max(0.05, Math.min(0.8, opacity));
+
+            this.ctx.fillStyle = `rgba(255, 255, 255, ${finalOpacity})`;
+            this.ctx.arc(actualX, actualY, node.size * Math.max(0.5, node.z * 0.4), 0, Math.PI * 2);
+            this.ctx.fill();
         });
         
         requestAnimationFrame(() => this.animate());
@@ -453,9 +465,6 @@ class TiltEffect {
 // ============================================
 // QUIZ SYSTEM
 // ============================================
-// ============================================
-// QUIZ SYSTEM
-// ============================================
 class QuizSystem {
     constructor() {
         this.questions = [
@@ -653,7 +662,7 @@ document.addEventListener('DOMContentLoaded', () => {
     UI.init();
     
     // Initialize systems
-    new NeuralField();
+    new SystemLattice(); // The global information field
     new CursorGlow();
     new ScrollAnimations();
     new CounterAnimation();
@@ -662,9 +671,6 @@ document.addEventListener('DOMContentLoaded', () => {
     new QuizSystem();
     new SkillNodes();
     new ProjectCards();
-    
-    // Initialize Three.js cosmos -> Handled by Global Solar System
-
     
     // Add reveal class for CSS animations
     document.querySelectorAll('[data-reveal]').forEach((el, i) => {
