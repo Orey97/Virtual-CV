@@ -97,101 +97,7 @@ const UI = {
 // ============================================
 // NEURAL FIELD (Background Canvas)
 // ============================================
-class NeuralField {
-    constructor() {
-        this.canvas = document.getElementById('neural-field');
-        if (!this.canvas) return;
-        
-        this.ctx = this.canvas.getContext('2d');
-        this.nodes = [];
-        this.connections = [];
-        this.width = 0;
-        this.height = 0;
-        
-        this.init();
-    }
-    
-    init() {
-        this.resize();
-        this.createNodes();
-        this.animate();
-        
-        window.addEventListener('resize', () => this.resize());
-    }
-    
-    resize() {
-        this.width = window.innerWidth;
-        this.height = window.innerHeight;
-        this.canvas.width = this.width;
-        this.canvas.height = this.height;
-    }
-    
-    createNodes() {
-        const count = Math.min(80, Math.floor(this.width / 25));
-        this.nodes = [];
-        
-        for (let i = 0; i < count; i++) {
-            this.nodes.push({
-                x: Math.random() * this.width,
-                y: Math.random() * this.height,
-                vx: (Math.random() - 0.5) * 0.3,
-                vy: (Math.random() - 0.5) * 0.3,
-                radius: Math.random() * 2 + 1,
-                pulseOffset: Math.random() * Math.PI * 2
-            });
-        }
-    }
-    
-    animate() {
-        this.ctx.clearRect(0, 0, this.width, this.height);
-        
-        const time = Date.now() * 0.001;
-        
-        // Update and draw nodes
-        this.nodes.forEach((node, i) => {
-            // Update position
-            node.x += node.vx;
-            node.y += node.vy;
-            
-            // Bounce off edges
-            if (node.x < 0 || node.x > this.width) node.vx *= -1;
-            if (node.y < 0 || node.y > this.height) node.vy *= -1;
-            
-            // Keep in bounds
-            node.x = Math.max(0, Math.min(this.width, node.x));
-            node.y = Math.max(0, Math.min(this.height, node.y));
-            
-            // Pulse effect
-            const pulse = Math.sin(time * 2 + node.pulseOffset) * 0.3 + 0.7;
-            
-            // Draw node
-            this.ctx.beginPath();
-            this.ctx.arc(node.x, node.y, node.radius * pulse, 0, Math.PI * 2);
-            this.ctx.fillStyle = `rgba(59, 130, 246, ${0.4 * pulse})`;
-            this.ctx.fill();
-            
-            // Draw connections
-            for (let j = i + 1; j < this.nodes.length; j++) {
-                const other = this.nodes[j];
-                const dx = node.x - other.x;
-                const dy = node.y - other.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                
-                if (dist < 150) {
-                    const opacity = (1 - dist / 150) * 0.15;
-                    this.ctx.beginPath();
-                    this.ctx.moveTo(node.x, node.y);
-                    this.ctx.lineTo(other.x, other.y);
-                    this.ctx.strokeStyle = `rgba(59, 130, 246, ${opacity})`;
-                    this.ctx.lineWidth = 1;
-                    this.ctx.stroke();
-                }
-            }
-        });
-        
-        requestAnimationFrame(() => this.animate());
-    }
-}
+// Deprecated: Replaced by 3D Latent Space (js/bg-neural.js)
 
 // ============================================
 // CURSOR GLOW
@@ -653,7 +559,7 @@ document.addEventListener('DOMContentLoaded', () => {
     UI.init();
     
     // Initialize systems
-    new NeuralField();
+    // new NeuralField(); // Removed
     new CursorGlow();
     new ScrollAnimations();
     new CounterAnimation();
