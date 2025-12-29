@@ -13,9 +13,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
     
     <!-- Styles -->
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/arsenal-3d.css">
     
     <!-- Three.js for 3D -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -40,6 +42,9 @@
         <div class="atmo-vignette"></div>
     </div>
 
+    <!-- === GLOBAL UNIVERSE BACKGROUND === -->
+    <!-- Managed by js/bg-cosmos.js -->
+
     <!-- === CURSOR FOLLOWER === -->
     <div class="cursor-glow" id="cursor-glow"></div>
 
@@ -61,7 +66,7 @@
             
             <ul class="nav-menu">
                 <li><a href="#hero" class="nav-item active" data-idx="01">Origin</a></li>
-                <li><a href="#about" class="nav-item" data-idx="02">Nexus</a></li>
+                <li><a href="#about" class="nav-item" data-idx="02">Profile</a></li>
                 <li><a href="#skills" class="nav-item" data-idx="03">Arsenal</a></li>
                 <li><a href="#projects" class="nav-item" data-idx="04">Deployments</a></li>
                 <li><a href="#interface" class="nav-item" data-idx="05">Interface</a></li>
@@ -88,10 +93,8 @@
     <!-- === MAIN CONTENT === -->
     <main>
         <!-- HERO COSMOS -->
+        <!-- HERO COSMOS -->
         <section class="hero" id="hero">
-            <div class="hero-cosmos" id="hero-cosmos">
-                <!-- Three.js Orbital System -->
-            </div>
             
             <div class="hero-content">
                 <div class="hero-badge" data-reveal>
@@ -125,8 +128,9 @@
                 </div>
                 
                 <!-- Hero Metrics Dashboard -->
+            <!-- Hero Metrics Dashboard -->
                 <div class="hero-dashboard" data-reveal>
-                    <div class="dash-stat">
+                    <div class="dash-stat glass-card">
                         <div class="stat-visual">
                             <svg viewBox="0 0 100 100" class="stat-arc">
                                 <circle cx="50" cy="50" r="45" class="arc-track"/>
@@ -134,10 +138,13 @@
                             </svg>
                             <span class="stat-num" data-count="98">0</span>
                         </div>
-                        <span class="stat-label">Accuracy %</span>
+                        <div class="stat-info">
+                            <span class="stat-label">Accuracy %</span>
+                            <span class="stat-desc">Validation Set</span>
+                        </div>
                     </div>
-                    <div class="dash-divider"></div>
-                    <div class="dash-stat">
+                    
+                    <div class="dash-stat glass-card">
                         <div class="stat-visual">
                             <svg viewBox="0 0 100 100" class="stat-arc">
                                 <circle cx="50" cy="50" r="45" class="arc-track"/>
@@ -145,10 +152,13 @@
                             </svg>
                             <span class="stat-num" data-count="24">0</span>
                         </div>
-                        <span class="stat-label">Models Live</span>
+                        <div class="stat-info">
+                            <span class="stat-label">Models Live</span>
+                            <span class="stat-desc">Production v2.1</span>
+                        </div>
                     </div>
-                    <div class="dash-divider"></div>
-                    <div class="dash-stat">
+                    
+                    <div class="dash-stat glass-card">
                         <div class="stat-visual">
                             <svg viewBox="0 0 100 100" class="stat-arc">
                                 <circle cx="50" cy="50" r="45" class="arc-track"/>
@@ -156,7 +166,10 @@
                             </svg>
                             <span class="stat-num" data-count="2.4">0</span>
                         </div>
-                        <span class="stat-label">TB Processed</span>
+                        <div class="stat-info">
+                            <span class="stat-label">TB Processed</span>
+                            <span class="stat-desc">Data Lake</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -266,103 +279,78 @@
                     <h2 class="section-title">Full-Spectrum Capabilities</h2>
                 </div>
                 
-                <div class="skills-constellation">
-                    <!-- Central Node -->
-                    <div class="constellation-core">
-                        <div class="core-ring"></div>
-                        <div class="core-label">DATA<br>SCIENCE</div>
+                <div class="arsenal-system" id="arsenal-system">
+                    <!-- BACKGROUND GRIDS -->
+                    <div class="arsenal-bg">
+                        <div class="grid-layer"></div>
+                        <div class="scan-line"></div>
                     </div>
-                    
-                    <!-- Skill Nodes -->
-                    <div class="skill-orbit orbit-1">
-                        <div class="skill-node" data-skill="python" data-level="95">
-                            <div class="node-glow"></div>
-                            <i class="fa-brands fa-python"></i>
-                            <span class="node-label">Python</span>
-                            <span class="node-level">95%</span>
+
+                    <!-- SVG CONNECTIONS LAYER -->
+                    <svg id="pipeline-svg" class="pipeline-connections" width="100%" height="100%"></svg>
+
+                    <!-- MAIN CONTROL INTERFACE -->
+                    <div class="arsenal-layout">
+                        <!-- LEFT: DOMAIN SELECTOR / INDICATORS -->
+                        <div class="domain-rail">
+                            <div class="rail-marker">NO. 01 // FND</div>
+                            <div class="rail-track"></div>
+                            <div class="rail-marker">NO. 02 // MDL</div>
+                            <div class="rail-track"></div>
+                            <div class="rail-marker">NO. 03 // SYN</div>
                         </div>
-                        <div class="skill-node" data-skill="tensorflow" data-level="88">
-                            <div class="node-glow"></div>
-                            <i class="fa-solid fa-brain"></i>
-                            <span class="node-label">TensorFlow</span>
-                            <span class="node-level">88%</span>
-                        </div>
-                        <div class="skill-node" data-skill="sql" data-level="90">
-                            <div class="node-glow"></div>
-                            <i class="fa-solid fa-database"></i>
-                            <span class="node-label">SQL</span>
-                            <span class="node-level">90%</span>
-                        </div>
-                    </div>
-                    
-                    <div class="skill-orbit orbit-2">
-                        <div class="skill-node" data-skill="pandas" data-level="96">
-                            <div class="node-glow"></div>
-                            <i class="fa-solid fa-table"></i>
-                            <span class="node-label">Pandas</span>
-                            <span class="node-level">96%</span>
-                        </div>
-                        <div class="skill-node" data-skill="sklearn" data-level="92">
-                            <div class="node-glow"></div>
-                            <i class="fa-solid fa-gears"></i>
-                            <span class="node-label">Scikit-Learn</span>
-                            <span class="node-level">92%</span>
-                        </div>
-                        <div class="skill-node" data-skill="pytorch" data-level="82">
-                            <div class="node-glow"></div>
-                            <i class="fa-solid fa-fire"></i>
-                            <span class="node-label">PyTorch</span>
-                            <span class="node-level">82%</span>
-                        </div>
-                        <div class="skill-node" data-skill="viz" data-level="89">
-                            <div class="node-glow"></div>
-                            <i class="fa-solid fa-chart-pie"></i>
-                            <span class="node-label">Visualization</span>
-                            <span class="node-level">89%</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Skills Detail Cards -->
-                <div class="skills-detail-grid">
-                    <div class="skill-detail glass-card" data-tilt>
-                        <div class="detail-header">
-                            <i class="fa-solid fa-microchip"></i>
-                            <h3>Machine Learning</h3>
-                        </div>
-                        <div class="detail-bars">
-                            <div class="bar-item">
-                                <div class="bar-meta"><span>Classification</span><span>94%</span></div>
-                                <div class="bar-track"><div class="bar-fill" data-width="94"></div></div>
+
+                        <!-- CENTER: THE ACTIVE MATRIX -->
+                        <div class="pipeline-grid" id="pipeline-grid">
+                            <!-- Injected by JS: 3 Columns -->
+                            <div class="sector-column" data-stage="1">
+                                <div class="sector-header">
+                                    <span class="sector-id">01</span>
+                                    <span class="sector-label">DATA ENGINE</span>
+                                </div>
+                                <div class="sector-modules" id="stage-1-modules"></div>
                             </div>
-                            <div class="bar-item">
-                                <div class="bar-meta"><span>Regression</span><span>91%</span></div>
-                                <div class="bar-track"><div class="bar-fill" data-width="91"></div></div>
+
+                            <div class="sector-column" data-stage="2">
+                                <div class="sector-header">
+                                    <span class="sector-id">02</span>
+                                    <span class="sector-label">PREDICTIVE CORE</span>
+                                </div>
+                                <div class="sector-modules" id="stage-2-modules"></div>
                             </div>
-                            <div class="bar-item">
-                                <div class="bar-meta"><span>Clustering</span><span>87%</span></div>
-                                <div class="bar-track"><div class="bar-fill" data-width="87"></div></div>
+
+                            <div class="sector-column" data-stage="3">
+                                <div class="sector-header">
+                                    <span class="sector-id">03</span>
+                                    <span class="sector-label">GENERATIVE NEXUS</span>
+                                </div>
+                                <div class="sector-modules" id="stage-3-modules"></div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="skill-detail glass-card" data-tilt>
-                        <div class="detail-header">
-                            <i class="fa-solid fa-chart-line"></i>
-                            <h3>Statistics</h3>
-                        </div>
-                        <div class="detail-bars">
-                            <div class="bar-item">
-                                <div class="bar-meta"><span>Hypothesis Testing</span><span>96%</span></div>
-                                <div class="bar-track"><div class="bar-fill" data-width="96"></div></div>
+
+                        <!-- RIGHT/BOTTOM: INTELLIGENCE CONSOLE -->
+                        <div class="pipeline-console" id="pipeline-console">
+                            <div class="console-header">
+                                <div class="console-tools">
+                                    <span class="tool-dot red"></span>
+                                    <span class="tool-dot yellow"></span>
+                                    <span class="tool-dot green"></span>
+                                </div>
+                                <span class="console-label">SYS.DIAGNOSTIC_V4</span>
                             </div>
-                            <div class="bar-item">
-                                <div class="bar-meta"><span>Bayesian Methods</span><span>84%</span></div>
-                                <div class="bar-track"><div class="bar-fill" data-width="84"></div></div>
+                            <div class="console-display" id="console-display">
+                                <div class="console-scroller" id="console-content">
+                                    <!-- Dynamic Content -->
+                                    <div class="init-text">
+                                        > DETECTING NEURAL PATHWAYS...<br>
+                                        > AWAITING TRAJECTORY INPUT.<br>
+                                        <span class="blink">_</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="bar-item">
-                                <div class="bar-meta"><span>Time Series</span><span>89%</span></div>
-                                <div class="bar-track"><div class="bar-fill" data-width="89"></div></div>
+                            <div class="console-footer">
+                                <span class="mem-stat">MEM: 64TB</span>
+                                <span class="net-stat">NET: SECURE</span>
                             </div>
                         </div>
                     </div>
@@ -596,6 +584,7 @@
         </div>
     </div>
 
+    <script src="js/bg-cosmos.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

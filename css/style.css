@@ -398,11 +398,7 @@ body:hover .cursor-glow {
     overflow: hidden;
 }
 
-.hero-cosmos {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-}
+/* .hero-cosmos removed - Global System managed by JS */
 
 .hero-content {
     position: relative;
@@ -550,22 +546,57 @@ body:hover .cursor-glow {
 .hero-dashboard {
     display: flex;
     align-items: center;
-    gap: var(--space-xl);
+    gap: var(--space-lg);
     padding: var(--space-lg) 0;
     border-top: 1px solid var(--c-border);
+    margin-top: var(--space-xl);
+    flex-wrap: wrap; /* Allow wrapping on small screens */
 }
 
 .dash-stat {
+    flex: 1;
+    min-width: 180px;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: var(--space-sm);
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+    border: 1px solid var(--c-border);
+    border-radius: 16px;
+    transition: all 0.3s var(--ease-out-quint);
+    position: relative;
+    overflow: hidden;
+}
+
+.dash-stat:hover {
+    transform: translateY(-5px);
+    border-color: var(--c-primary-glow);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+}
+
+.dash-stat::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--c-primary), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.dash-stat:hover::before {
+    opacity: 1;
 }
 
 .stat-visual {
     position: relative;
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.3));
 }
 
 .stat-arc {
@@ -576,19 +607,23 @@ body:hover .cursor-glow {
 
 .arc-track {
     fill: none;
-    stroke: var(--c-border);
-    stroke-width: 6;
+    stroke: rgba(255, 255, 255, 0.1);
+    stroke-width: 5;
 }
 
 .arc-fill {
     fill: none;
-    stroke: url(#arcGradient);
-    stroke-width: 6;
+    stroke: var(--c-primary);
+    stroke-width: 5;
     stroke-linecap: round;
     stroke-dasharray: 283;
-    stroke-dashoffset: 283;
+    stroke-dashoffset: 283; /* Will be animated by JS */
     transition: stroke-dashoffset 1.5s var(--ease-out-expo);
 }
+
+/* Specific colors for different stats if needed, can add classes or keep uniform */
+.dash-stat:nth-child(2) .arc-fill { stroke: var(--c-accent); }
+.dash-stat:nth-child(3) .arc-fill { stroke: var(--c-purple); }
 
 .stat-num {
     position: absolute;
@@ -596,22 +631,30 @@ body:hover .cursor-glow {
     left: 50%;
     transform: translate(-50%, -50%);
     font-family: var(--font-mono);
-    font-size: 1.4rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--c-text);
 }
 
-.stat-label {
-    font-size: 0.75rem;
-    color: var(--c-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+.stat-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.dash-divider {
-    width: 1px;
-    height: 40px;
-    background: var(--c-border);
+.stat-label {
+    font-size: 0.7rem;
+    color: var(--c-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
+}
+
+.stat-desc {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--c-text-2);
+    white-space: nowrap;
 }
 
 /* Hero Floaters */
