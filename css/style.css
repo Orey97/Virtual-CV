@@ -1343,6 +1343,18 @@ body:hover .cursor-glow {
     background: var(--c-primary-dim);
 }
 
+.quiz-btn.correct {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: var(--c-success);
+    color: var(--c-success);
+}
+
+.quiz-btn.wrong {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: var(--c-danger);
+    color: var(--c-danger);
+}
+
 /* Contact Cards */
 .contact-cards {
     display: flex;

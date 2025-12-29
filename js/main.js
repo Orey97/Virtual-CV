@@ -607,6 +607,9 @@ class TiltEffect {
 // ============================================
 // QUIZ SYSTEM
 // ============================================
+// ============================================
+// QUIZ SYSTEM
+// ============================================
 class QuizSystem {
     constructor() {
         this.questions = [
@@ -616,7 +619,7 @@ class QuizSystem {
                 answer: 1
             },
             {
-                q: "What is the primary purpose of regularization?",
+                q: "What is the primary purpose of regularization (L1/L2)?",
                 opts: ["Increase model bias", "Prevent overfitting", "Speed up training", "Normalize input data"],
                 answer: 1
             },
@@ -624,10 +627,46 @@ class QuizSystem {
                 q: "Which metric is most appropriate for imbalanced datasets?",
                 opts: ["Accuracy", "F1-Score", "MSE", "R-Squared"],
                 answer: 1
+            },
+            {
+                q: "Which activation function helps solve the vanishing gradient problem?",
+                opts: ["Sigmoid", "Tanh", "ReLU", "Linear"],
+                answer: 2
+            },
+            {
+                q: "What does Principal Component Analysis (PCA) maximize?",
+                opts: ["Class Separability", "Variance", "Entropy", "Likelihood"],
+                answer: 1
+            },
+            {
+                q: "Which of the following is an ensemble learning method?",
+                opts: ["SVM", "K-Means", "Random Forest", "Logistic Regression"],
+                answer: 2
+            },
+            {
+                q: "What is the core mechanism behind Transformer architectures?",
+                opts: ["Convolution", "Recurrence", "Self-Attention", "Max Pooling"],
+                answer: 2
+            },
+            {
+                q: "A model with low bias and high variance is likely suffering from...",
+                opts: ["Underfitting", "Overfitting", "Convergence Failure", "High Entropy"],
+                answer: 1
+            },
+            {
+                q: "Which algorithm is used for unsupervised clustering?",
+                opts: ["Decision Tree", "Linear Regression", "K-Means", "Naive Bayes"],
+                answer: 2
+            },
+            {
+                q: "The goal of a Reinforcement Learning agent is to maximize...",
+                opts: ["Loss", "Accuracy", "Entropy", "Expected Cumulative Reward"],
+                answer: 3
             }
         ];
         this.current = 0;
         this.score = 0;
+        this.locked = false;
         
         this.init();
     }
@@ -642,11 +681,11 @@ class QuizSystem {
     start() {
         this.current = 0;
         this.score = 0;
+        this.locked = false;
         this.renderQuestion();
     }
     
     renderQuestion() {
-        const container = document.getElementById('quiz-container');
         const prompt = document.getElementById('quiz-prompt');
         const options = document.getElementById('quiz-options');
         
@@ -656,32 +695,45 @@ class QuizSystem {
         }
         
         const q = this.questions[this.current];
-        prompt.textContent = q.q;
+        prompt.textContent = `${this.current + 1}/${this.questions.length}: ${q.q}`;
         
         options.innerHTML = q.opts.map((opt, i) => 
             `<button class="quiz-btn" data-idx="${i}">>> ${opt}</button>`
         ).join('');
         
         options.querySelectorAll('.quiz-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => this.checkAnswer(parseInt(e.target.dataset.idx)));
+            btn.addEventListener('click', (e) => this.checkAnswer(parseInt(e.target.dataset.idx), e.target));
         });
     }
     
-    checkAnswer(idx) {
+    checkAnswer(idx, btn) {
+        if (this.locked) return;
+        this.locked = true;
+        
         const q = this.questions[this.current];
         const correct = idx === q.answer;
+        const allBtns = document.querySelectorAll('.quiz-btn');
         
         if (correct) {
+            btn.classList.add('correct');
             this.score++;
             State.addXP(50, 'Correct Answer!');
+        } else {
+            btn.classList.add('wrong');
+            // Highlight the correct one
+            if (allBtns[q.answer]) {
+                allBtns[q.answer].classList.add('correct');
+            }
         }
         
-        this.current++;
-        setTimeout(() => this.renderQuestion(), 500);
+        setTimeout(() => {
+            this.current++;
+            this.locked = false;
+            this.renderQuestion();
+        }, 1500);
     }
     
     showResults() {
-        const container = document.getElementById('quiz-container');
         const prompt = document.getElementById('quiz-prompt');
         const options = document.getElementById('quiz-options');
         
@@ -690,15 +742,17 @@ class QuizSystem {
         prompt.innerHTML = `Protocol Complete: ${percent}% Accuracy`;
         options.innerHTML = `
             <div style="color: var(--c-text-muted); margin-bottom: 1rem;">
-                Score: ${this.score}/${this.questions.length}
+                Final Score: ${this.score}/${this.questions.length}
             </div>
-            <button class="quiz-btn" id="restart-quiz">REINITIALIZE</button>
+            <button class="quiz-btn" id="restart-quiz">REINITIALIZE PROTOCOL</button>
         `;
         
         document.getElementById('restart-quiz').addEventListener('click', () => this.start());
         
         if (percent === 100) {
-            State.addXP(100, 'Perfect Score Achievement!');
+            State.addXP(200, 'Mastery Achievement!');
+        } else if (percent >= 80) {
+            State.addXP(100, 'Proficiency Achievement');
         }
     }
 }
