@@ -147,41 +147,140 @@ class MockCalendarAdapter extends ICalendarAdapter {
 }
 
 /**
- * GoogleLiveAdapter
- * The Production Adapter.
- * Connects to the serverless Vercel backend /api/book for actual Google Calendar writes.
+ * GoogleLiveAdapter V3.0 (Service Account Uplink)
+ * 
+ * Replaces the previous client-side specific logic.
+ * Now connects to /api/calendar to fetch REAL busy slots from the Service Account.
  */
 class GoogleLiveAdapter extends ICalendarAdapter {
     constructor() {
         super();
-        this.mockFallback = new MockCalendarAdapter(); // Use mock availability for privacy/performance
+        this.busyCache = null;
+        this.lastFetch = 0;
     }
 
     async initialize() {
-        console.log('[System] Initializing Adapter: GoogleLiveAdapter (Serverless)');
+        console.log('[System] Initializing Adapter: GoogleLiveAdapter (Service Account Uplink)');
         return true;
     }
 
-    // WE KEEP MOCK AVAILABILITY FOR UX SPEED & PRIVACY
-    // Real availability reads would require a separate /api/availability endpoint
+    // Helper: Fetch busy slots from our secure backend
+    async _fetchBusySlots() {
+        // Simple caching (1 minute) to prevent spamming the API on every click
+        if (this.busyCache && (Date.now() - this.lastFetch < 60000)) {
+            return this.busyCache;
+        }
+
+        try {
+            const response = await fetch('/api/calendar');
+            if (!response.ok) throw new Error('Sync Failed');
+            
+            const data = await response.json();
+            this.busyCache = data.busySlots || [];
+            this.lastFetch = Date.now();
+            return this.busyCache;
+        } catch (error) {
+            console.error('[System] Calendar Sync Error:', error);
+            return []; // Fail gracefully (show all open) or handle error UI
+        }
+    }
+
     async getAvailability(year, month) {
-        return this.mockFallback.getAvailability(year, month);
+        // 1. Fetch Real Busy Data
+        const busySlots = await this._fetchBusySlots();
+        
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const availability = [];
+        const { daysOff } = SYSTEM_CONFIG.calendar;
+
+        for (let d = 1; d <= daysInMonth; d++) {
+            const dateObj = new Date(year, month, d);
+            const dateStr = `${year}-${String(month + 1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+            const dayOfWeek = dateObj.getDay();
+            
+            let status = 'AVAILABLE';
+
+            // A. Structural Constraints (Weekends)
+            if (daysOff.includes(dayOfWeek)) {
+                status = 'UNAVAILABLE';
+            } else {
+                // B. Real Calendar Constraints
+                // Check if any "Busy Slot" covers the ENTIRE business day (simplification)
+                // Or if the day has varying degrees of busyness.
+                // For V3.0, let's mark the day as FULLY_BOOKED if it has > 4 hours of meetings
+                // or keep it AVAILABLE but let getSlots handle the specific times.
+                
+                // Let's check generally if there are slots on this day
+                const daysEvents = busySlots.filter(slot => slot.start.startsWith(dateStr));
+                
+                if (daysEvents.length > 3) { // Arbitrary heuristic for "Heavy Day"
+                     // status = 'HEAVY'; // Could use a different color
+                }
+                
+                // For now, we leave the day clickable (AVAILABLE) 
+                // so the user can see which specific slots are open in the next view.
+            }
+
+            availability.push({
+                date: d,
+                fullDate: dateStr,
+                status: status
+            });
+        }
+        return availability;
     }
 
     async getSlots(dateStr) {
-        return this.mockFallback.getSlots(dateStr);
+        // 1. Fetch Real Busy Data
+        const busySlots = await this._fetchBusySlots();
+        
+        // 2. Filter for this specific day
+        // Google timestamps are ISO: 2023-10-25T14:30:00+01:00
+        const daysBusyness = busySlots.filter(slot => {
+            return slot.start.startsWith(dateStr) || slot.end.startsWith(dateStr);
+        });
+
+        const slots = [];
+        const { businessStart, businessEnd } = SYSTEM_CONFIG.calendar;
+
+        for (let hour = businessStart; hour < businessEnd; hour++) {
+            const timeStr = `${hour}:00`;
+            const slotStart = new Date(`${dateStr}T${String(hour).padStart(2,'0')}:00:00`);
+            const slotEnd = new Date(`${dateStr}T${String(hour+1).padStart(2,'0')}:00:00`);
+            
+            // Check overlap with any real busy slot
+            const isBusy = daysBusyness.some(busy => {
+                const bStart = new Date(busy.start);
+                const bEnd = new Date(busy.end);
+                
+                // Overlap logic: (StartA < EndB) and (EndA > StartB)
+                return (slotStart < bEnd) && (slotEnd > bStart);
+            });
+
+            slots.push({
+                time: timeStr,
+                status: isBusy ? 'BUSY' : 'AVAILABLE'
+            });
+        }
+        
+        return slots;
     }
 
-    // THE REAL LOGIC: Write to Backend
+    // Write to Booking API (Existing Logic)
     async createBooking(payload) {
+        // Reuse the existing /api/book implementation which handles the write
+        // Note: usage of /api/book requires GOOGLE_REFRESH_TOKEN env var setup separately
+        // or we can migrate /api/book to use Service Account too. 
+        // For the purpose of "Calendar Read", we strictly use Service Account.
+        // For "Calendar Write", the existing flow via Refresh Token is actually safer for user attribution,
+        // BUT if the goal is Service Account for everything, we should update createBooking too.
+        // Assuming /api/book remains as is for now (Hybrid approach is common).
+        
         console.log('[System] Transmitting Booking Payload to /api/book...');
-
         try {
             const response = await fetch('/api/book', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     name: payload.identity,
                     email: payload.contact,
@@ -191,21 +290,8 @@ class GoogleLiveAdapter extends ICalendarAdapter {
                     timezone: payload.time.timezone
                 })
             });
-
             const data = await response.json();
-
-            if (!response.ok) {
-                // Handle Backend Not Configured (503) specifically
-                if (response.status === 503) {
-                    console.warn('[System] Backend 503: Env Vars Missing');
-                    return {
-                        status: 'OFFLINE_MODE',
-                        error: 'Backend system not fully initialized. Event logged locally.',
-                        isFallback: true
-                    };
-                }
-                throw new Error(data.error || 'API Error');
-            }
+            if (!response.ok) throw new Error(data.error || 'API Error');
 
             return {
                 id: data.eventId,
@@ -214,15 +300,9 @@ class GoogleLiveAdapter extends ICalendarAdapter {
                 link: data.link,
                 timestamp: new Date().toISOString()
             };
-
         } catch (error) {
             console.error('[System] Live Sync Failed:', error);
-            // Fallback to local logging so user doesn't lose data
-            return {
-                status: 'LOCAL_FALLBACK',
-                error: error.message,
-                timestamp: new Date().toISOString()
-            };
+            return { status: 'LOCAL_FALLBACK', error: error.message };
         }
     }
 }
