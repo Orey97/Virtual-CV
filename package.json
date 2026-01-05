@@ -1,0 +1,9 @@
+{
+  "name": "virtual-cv-backend",
+  "version": "1.0.0",
+  "description": "Serverless backend for Contact System",
+  "main": "api/book.js",
+  "dependencies": {
+    "googleapis": "^126.0.1"
+  }
+}

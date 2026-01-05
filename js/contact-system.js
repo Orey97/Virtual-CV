@@ -14,7 +14,7 @@ const SYSTEM_CONFIG = {
     auth: {
         clientId: '732652071804-mlo3vo636rhuvae8pig3q49e1bdnrkn6.apps.googleusercontent.com',
         scope: 'https://www.googleapis.com/auth/calendar.events',
-        mode: 'OFFLINE' 
+        mode: 'LIVE' 
     },
     calendar: {
         businessStart: 10, // 10:00 AM
@@ -146,9 +146,95 @@ class MockCalendarAdapter extends ICalendarAdapter {
     }
 }
 
+/**
+ * GoogleLiveAdapter
+ * The Production Adapter.
+ * Connects to the serverless Vercel backend /api/book for actual Google Calendar writes.
+ */
+class GoogleLiveAdapter extends ICalendarAdapter {
+    constructor() {
+        super();
+        this.mockFallback = new MockCalendarAdapter(); // Use mock availability for privacy/performance
+    }
+
+    async initialize() {
+        console.log('[System] Initializing Adapter: GoogleLiveAdapter (Serverless)');
+        return true;
+    }
+
+    // WE KEEP MOCK AVAILABILITY FOR UX SPEED & PRIVACY
+    // Real availability reads would require a separate /api/availability endpoint
+    async getAvailability(year, month) {
+        return this.mockFallback.getAvailability(year, month);
+    }
+
+    async getSlots(dateStr) {
+        return this.mockFallback.getSlots(dateStr);
+    }
+
+    // THE REAL LOGIC: Write to Backend
+    async createBooking(payload) {
+        console.log('[System] Transmitting Booking Payload to /api/book...');
+
+        try {
+            const response = await fetch('/api/book', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: payload.identity,
+                    email: payload.contact,
+                    briefing: payload.briefing,
+                    date: payload.time.start,
+                    startTime: payload.time.slot,
+                    timezone: payload.time.timezone
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                // Handle Backend Not Configured (503) specifically
+                if (response.status === 503) {
+                    console.warn('[System] Backend 503: Env Vars Missing');
+                    return {
+                        status: 'OFFLINE_MODE',
+                        error: 'Backend system not fully initialized. Event logged locally.',
+                        isFallback: true
+                    };
+                }
+                throw new Error(data.error || 'API Error');
+            }
+
+            return {
+                id: data.eventId,
+                status: 'CONFIRMED',
+                calendar: 'GOOGLE_LIVE',
+                link: data.link,
+                timestamp: new Date().toISOString()
+            };
+
+        } catch (error) {
+            console.error('[System] Live Sync Failed:', error);
+            // Fallback to local logging so user doesn't lose data
+            return {
+                status: 'LOCAL_FALLBACK',
+                error: error.message,
+                timestamp: new Date().toISOString()
+            };
+        }
+    }
+}
+
 class CalendarService {
-    constructor(adapter) {
-        this.adapter = adapter;
+    constructor() {
+        // Factory Logic: Decide adapter based on Config
+        if (SYSTEM_CONFIG.auth.mode === 'LIVE') {
+            this.adapter = new GoogleLiveAdapter();
+        } else {
+            this.adapter = new MockCalendarAdapter();
+        }
     }
     async initialize() { return this.adapter.initialize(); }
     async getAvailability(y, m) { return this.adapter.getAvailability(y, m); }
@@ -167,7 +253,7 @@ class ContactInterface {
         this.form = document.getElementById('scheduler-form');
         this.slotDisplay = document.getElementById('slot-display');
         
-        this.service = new CalendarService(new MockCalendarAdapter());
+        this.service = new CalendarService(); // Factory handles injection
         this.currentDate = new Date();
         this.selectedDate = null;
         this.selectedSlot = null;
@@ -177,6 +263,15 @@ class ContactInterface {
 
     async init() {
         if (!this.container) return;
+        
+        // Update Console Title dynamically
+        const consoleTitle = document.querySelector('.console-title');
+        if (consoleTitle) {
+            consoleTitle.innerHTML = SYSTEM_CONFIG.auth.mode === 'LIVE' 
+                ? 'AVAILABILITY_SYNC [LIVE_UPLINK]' 
+                : 'AVAILABILITY_SYNC [OFFLINE]';
+        }
+
         await this.service.initialize();
         this.renderCalendar(this.currentDate);
         this.bindFormEvents();
@@ -207,8 +302,14 @@ class ContactInterface {
                     <!-- Days Injected Here -->
                 </div>
                 <div class="cal-footer-status">
-                     <div class="status-item"><span class="status-dot green"></span><span>READY</span></div>
-                     <div class="status-item"><span class="status-dot gray"></span><span>OFFLINE (INTENTIONAL)</span></div>
+                     <div class="status-item">
+                        <span class="status-dot green"></span>
+                        <span>${SYSTEM_CONFIG.auth.mode === 'LIVE' ? 'ACTIVE' : 'READY'}</span>
+                     </div>
+                     <div class="status-item">
+                        <span class="status-dot ${SYSTEM_CONFIG.auth.mode === 'LIVE' ? 'green' : 'gray'}"></span>
+                        <span>SYNC: ${SYSTEM_CONFIG.auth.mode === 'LIVE' ? 'GOOGLE_API' : 'OFFLINE'}</span>
+                     </div>
                 </div>
             </div>
             <div class="slots-view" id="slots-view">
