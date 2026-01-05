@@ -1151,130 +1151,7 @@ class NeuralArchitect {
 // ============================================
 // EXECUTIVE SCHEDULING INTERFACE (V7.0)
 // ============================================
-class ExecutiveScheduler {
-    constructor() {
-        this.container = document.querySelector('.calendar-widget');
-        this.slotDisplay = document.querySelector('.slot-value');
-        this.form = document.getElementById('scheduler-form');
-        this.clockEl = document.getElementById('sys-clock');
-        
-        if (!this.container) return;
-
-        this.initCalendar();
-        this.initClock();
-        this.initDockInteractions();
-        this.initFormLogic();
-    }
-
-    initCalendar() {
-        // Simple Calendar Generation for current month
-        const date = new Date();
-        const month = date.toLocaleString('default', { month: 'long' });
-        const year = date.getFullYear();
-        
-        // Structure
-        let html = `
-            <div class="cal-header">
-                <button class="cal-nav prev"><i class="fa-solid fa-chevron-left"></i></button>
-                <span class="cal-title">${month.toUpperCase()} ${year}</span>
-                <button class="cal-nav next"><i class="fa-solid fa-chevron-right"></i></button>
-            </div>
-            <div class="cal-grid">
-                <div class="cal-day-name">S</div>
-                <div class="cal-day-name">M</div>
-                <div class="cal-day-name">T</div>
-                <div class="cal-day-name">W</div>
-                <div class="cal-day-name">T</div>
-                <div class="cal-day-name">F</div>
-                <div class="cal-day-name">S</div>
-        `;
-        
-        // Days (Mock logic: Start on Wed, 30 days)
-        // Ideally should be accurate, but mainly UI visual for now
-        // Let's make it look full
-        for (let i = 0; i < 3; i++) html += `<div class="cal-day empty"></div>`;
-        for (let i = 1; i <= 30; i++) {
-            // Random availability
-            const status = (i > date.getDate() && Math.random() > 0.3) ? 'available' : 'busy';
-            const isToday = i === date.getDate() ? 'today' : '';
-            html += `<button class="cal-day ${status} ${isToday}" data-day="${i}">${i}</button>`;
-        }
-        
-        html += `</div>`;
-        this.container.innerHTML = html;
-        
-        // Listeners
-        this.container.querySelectorAll('.cal-day.available').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                this.selectDate(e.target);
-            });
-        });
-    }
-    
-    selectDate(btn) {
-        // Visual Update
-        this.container.querySelectorAll('.cal-day').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        
-        const day = btn.dataset.day;
-        const fullDate = `2025-05-${day.padStart(2,'0')}`;
-        
-        // Form Update
-        this.slotDisplay.textContent = fullDate;
-        this.slotDisplay.classList.add('active');
-        
-        // Terminal Update (Gamification)
-        const terminalOutput = document.querySelector('#terminal-content');
-        if (terminalOutput) {
-            terminalOutput.innerHTML += `
-                <div class="terminal-line">
-                    <span class="prompt">></span>
-                    <span class="output" style="color:var(--c-signal)">ALLOCATING TIME_SLOT: [${fullDate}]...</span>
-                </div>
-            `;
-            // Scroll to bottom
-            const term = document.getElementById('terminal');
-             if(term) term.scrollTop = term.scrollHeight;
-        }
-        
-        // XP Sync
-        State.addXP(100, 'Scheduling Protocol Initiated');
-    }
-
-    initClock() {
-         const tick = () => {
-             const now = new Date();
-             this.clockEl.textContent = now.toISOString().split('T')[1].split('.')[0] + ' UTC';
-         };
-         setInterval(tick, 1000);
-         tick();
-    }
-
-    initDockInteractions() {
-        document.querySelectorAll('.dock-item').forEach(item => {
-            item.addEventListener('mouseenter', () => {
-                 // Sfx or visual pulse handled by CSS
-            });
-            item.addEventListener('click', () => {
-                const port = item.dataset.port;
-                State.addXP(100, `Access Port [${port}] Initialized`);
-            });
-        });
-    }
-
-    initFormLogic() {
-        this.form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const btn = this.form.querySelector('.scheduler-submit');
-            btn.innerHTML = `<span class="btn-text">CONFIRMING...</span>`;
-            
-            setTimeout(() => {
-                btn.innerHTML = `<span class="btn-text" style="color:var(--c-success)">APPOINTMENT CONFIRMED</span>`;
-                // REMOVED: XP Reward to eliminate toast
-            }, 1500);
-        });
-    }
-}
+// ExecutiveScheduler replaced by ContactInterface in contact-system.js
 
 // ============================================
 // INITIALIZATION
@@ -1290,14 +1167,14 @@ document.addEventListener('DOMContentLoaded', () => {
     new CounterAnimation();
     new Navigation();
     new TiltEffect();
-    new QuizSystem();
     new SkillNodes();
     new ProjectCards();
     
     // Initialize Neural Architect V6
     new NeuralArchitect();
     new KineticStream(); // V2.0 Deployment Stream
-    new ExecutiveScheduler(); // V7.0 Scheduling Terminal
+    // ExecutiveScheduler initialization moved to contact-system.js
+    new NeuralAlignmentSimulator('research-lab'); // V16.0 Research Lab
     
     // Add reveal class for CSS animations
     document.querySelectorAll('[data-reveal]').forEach((el, i) => {

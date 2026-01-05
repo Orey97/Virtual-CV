@@ -340,48 +340,102 @@
 
         <!-- CONTACT / INTERFACE -->
         <!-- === SECTION 5: INTERFACE (Terminal) === -->
-        <section class="section" id="interface">
-            <div class="container">
-                <div class="section-header center" data-reveal>
-                    <div class="section-tag">
-                        <span class="tag-line"></span>
-                        <span>Assessment</span>
-                    </div>
-                    <h2 class="section-title">Neural Interface</h2>
-                </div>
+        <!-- === SECTION 5: INTERFACE (Neural Research Lab V16.0) === -->
+        <!-- === SECTION 5: INTERFACE (Neural Foundry IDE V20.0) === -->
+        <section class="section interface-section" id="interface">
+            <div class="neural-foundry-container" id="nf-container">
                 
-                <div style="max-width: 800px; margin: 0 auto;">
-                    <!-- Terminal Window -->
-                    <div class="terminal-window" id="terminal">
-                        <div class="terminal-bar">
-                            <div class="bar-dots">
-                                <span class="dot red"></span>
-                                <span class="dot yellow"></span>
-                                <span class="dot green"></span>
-                            </div>
-                            <span class="bar-title">renaldo_interface.py</span>
+                <!-- ZONE A: THE SYLLABUS RAIL (Obsidian Sidebar) -->
+                <aside class="nf-sidebar">
+                    <div class="nf-sidebar-header">
+                        <div class="nf-brand">
+                            <i class="fa-solid fa-layer-group"></i> NF_IDE_V20
                         </div>
-                        <div class="terminal-content" id="terminal-content">
-                            <div class="terminal-line">
-                                <span class="prompt">$</span> python knowledge_check.py
+                        <div class="nf-context">
+                            CURRICULUM: DS_MASTERY <span id="nf-xp" class="nf-xp-badge">[XP: 0]</span>
+                        </div>
+                    </div>
+                    <div class="nf-module-list" id="nf-module-list">
+                        <!-- Modules Injected JS -->
+                    </div>
+                </aside>
+
+                <!-- ZONE B: THE COMPOSITE CODE EDITOR (Expanded Workspace) -->
+                <div class="nf-editor-panel" id="nf-editor-panel">
+                    <!-- 1. HEADER (TABS & TOOLBAR) -->
+                    <div class="ide-header">
+                        <div class="ide-tabs">
+                            <div class="ide-tab active">
+                                <i class="fa-brands fa-python"></i> script.py
+                                <span class="tab-close"><i class="fa-solid fa-xmark"></i></span>
                             </div>
-                            <div class="terminal-line">
-                                <span class="output">[INFO] Neural handshake initiated...</span>
+                            <div class="ide-tab">
+                                <i class="fa-solid fa-database"></i> data.csv
                             </div>
-                            <div class="terminal-line">
-                                <span class="output success">[SUCCESS] Connection established.</span>
-                            </div>
-                            <div class="quiz-container" id="quiz-container">
-                                <div class="quiz-prompt" id="quiz-prompt">
-                                    Ready to test your ML knowledge?
-                                </div>
-                                <div class="quiz-options" id="quiz-options">
-                                    <button class="quiz-btn" id="start-quiz">INITIALIZE PROTOCOL</button>
-                                </div>
+                        </div>
+                        
+                        <!-- NEW TOOLBAR ACTIONS -->
+                        <div class="ide-toolbar">
+                            <button class="ide-btn-action btn-hint" id="nf-btn-hint" title="Get Hint">
+                                <i class="fa-regular fa-lightbulb"></i> Hint
+                            </button>
+                            <button class="ide-btn-action btn-run" id="nf-btn-run" title="Run Code">
+                                <i class="fa-solid fa-play"></i> Run & Check
+                            </button>
+                            <div class="divide-v"></div>
+                            <div class="window-controls">
+                                <span class="ctrl red"></span>
+                                <span class="ctrl yellow"></span>
+                                <span class="ctrl green"></span>
                             </div>
                         </div>
                     </div>
+
+                    <!-- 2. BODY (GUTTER + CANVAS + FAB) -->
+                    <div class="ide-body">
+                        <div class="ide-gutter" id="nf-gutter">
+                            <!-- Line numbers injected via JS -->
+                            <div class="ln">1</div>
+                        </div>
+                        
+                        <!-- ContentEditable Canvas -->
+                        <div class="ide-canvas" id="nf-code-editor" contenteditable="true" spellcheck="false">
+                            <!-- Code with syntax spans injected via JS -->
+                        </div>
+
+                        <!-- ★★★ FLOATING ACTION BUTTON (THE TRIGGER) ★★★ -->
+                        <button class="fab-run-protocol" id="nf-fab-run">
+                            <i class="fa-solid fa-play"></i>
+                            <span>RUN PROTOCOL</span>
+                        </button>
+                    </div>
+
+                    <!-- 3. FOOTER (STATUS BAR) -->
+                    <div class="ide-footer">
+                        <div class="footer-left">
+                            <span class="git-branch"><i class="fa-solid fa-code-branch"></i> main*</span>
+                            <span class="warning-count"><i class="fa-solid fa-triangle-exclamation"></i> 0</span>
+                        </div>
+                        <div class="footer-right">
+                            <span class="cursor-pos">Ln 1, Col 1</span>
+                            <span class="encoding">UTF-8</span>
+                            <span class="lang-mode">Python</span>
+                            <span class="feedback-icon"><i class="fa-regular fa-bell"></i></span>
+                        </div>
+                    </div>
+
+                    <!-- ★★★ FEEDBACK CONSOLE (THE CHECKER) ★★★ -->
+                    <div class="feedback-console" id="nf-feedback-console">
+                        <div class="console-header">
+                            <span class="console-title"><i class="fa-solid fa-terminal"></i> OUTPUT</span>
+                            <button class="console-close" id="nf-console-close"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <div class="console-body" id="nf-console-body">
+                            <!-- Feedback injected via JS -->
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </section>
 
@@ -399,7 +453,7 @@
                         <span class="tag-line"></span>
                         <span>Tactical Sync</span>
                     </div>
-                    <h2 class="section-title">Executive Scheduling</h2>
+                    <h2 class="section-title">Strategic Alignment</h2>
                 </div>
 
                 <div class="scheduler-interface">
@@ -432,7 +486,7 @@
                                     <span class="slot-value">PENDING_SELECTION</span>
                                 </div>
                                 <button type="submit" class="btn btn-plasma scheduler-submit">
-                                    <span class="btn-text">CONFIRM APPOINTMENT</span>
+                                    <span class="btn-text">REQUEST ALIGNMENT</span>
                                     <span class="btn-shine"></span>
                                 </button>
                             </form>
@@ -442,7 +496,7 @@
                         <div class="console-column right">
                             <div class="console-header">
                                 <span class="status-indicator cyan"></span>
-                                <span class="console-title">AVAILABILITY_SYNC</span>
+                                <span class="console-title">AVAILABILITY_SYNC [OFFLINE]</span>
                             </div>
                             <div class="calendar-widget" id="calendar-widget">
                                 <!-- Calendar Generated via JS -->
@@ -544,6 +598,8 @@
     </div>
 
     <script src="js/kinetic-stream.js"></script>
+    <script src="js/interface-visualizer.js"></script>
+    <script src="js/contact-system.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
