@@ -14,6 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <!-- Styles -->
     <link rel="stylesheet" href="css/style.css">
@@ -47,10 +48,14 @@
         <nav class="nav-inner">
             <a href="#hero" class="brand">
                 <div class="brand-mark">
-                    <svg viewBox="0 0 40 40" class="brand-svg">
-                        <circle cx="20" cy="20" r="18" class="brand-ring"/>
-                        <circle cx="20" cy="20" r="6" class="brand-core"/>
-                    </svg>
+                    <div class="neural-core-wrapper">
+                        <div class="neural-core">
+                            <div class="core-center"></div>
+                            <div class="gyro-ring ring-1"></div>
+                            <div class="gyro-ring ring-2"></div>
+                            <div class="gyro-ring ring-3"></div>
+                        </div>
+                    </div>
                 </div>
                 <div class="brand-text">
                     <span class="brand-name">RENALDO ARAPI</span>
@@ -272,72 +277,26 @@
                 </div>
                 
                 <div class="arsenal-system" id="arsenal-system">
-                    <!-- BACKGROUND GRIDS REMOVED: Using Global Atmosphere -->
-                    <!-- SVG CONNECTIONS LAYER -->
-                    <svg id="pipeline-svg" class="pipeline-connections" width="100%" height="100%"></svg>
-
-                    <!-- MAIN CONTROL INTERFACE -->
-                    <div class="arsenal-layout">
-                        <!-- LEFT: DOMAIN SELECTOR / INDICATORS -->
-                        <div class="domain-rail">
-                            <div class="rail-marker">NO. 01 // FND</div>
-                            <div class="rail-track"></div>
-                            <div class="rail-marker">NO. 02 // MDL</div>
-                            <div class="rail-track"></div>
-                            <div class="rail-marker">NO. 03 // SYN</div>
+                    <div class="holo-stage" id="holo-stage">
+                        <svg class="synapse-layer" id="synapse-layer" aria-hidden="true"></svg>
+                        <div class="bento-grid" id="bento-grid">
+                            <!-- Injected by NeuralAnalyzer class -->
                         </div>
-
-                        <!-- CENTER: THE ACTIVE MATRIX -->
-                        <div class="pipeline-grid" id="pipeline-grid">
-                            <!-- Injected by JS: 3 Columns -->
-                            <div class="sector-column" data-stage="1">
-                                <div class="sector-header">
-                                    <span class="sector-id">01</span>
-                                    <span class="sector-label">DATA ENGINE</span>
-                                </div>
-                                <div class="sector-modules" id="stage-1-modules"></div>
-                            </div>
-
-                            <div class="sector-column" data-stage="2">
-                                <div class="sector-header">
-                                    <span class="sector-id">02</span>
-                                    <span class="sector-label">PREDICTIVE CORE</span>
-                                </div>
-                                <div class="sector-modules" id="stage-2-modules"></div>
-                            </div>
-
-                            <div class="sector-column" data-stage="3">
-                                <div class="sector-header">
-                                    <span class="sector-id">03</span>
-                                    <span class="sector-label">GENERATIVE NEXUS</span>
-                                </div>
-                                <div class="sector-modules" id="stage-3-modules"></div>
-                            </div>
+                    </div>
+                </div>
+                
+                <!-- Full Screen Diagnostic Overlay (V6 Structure) -->
+                <div id="diagnostic-overlay" class="diagnostic-overlay" aria-hidden="true">
+                    <div class="diag-terminal">
+                        <div class="diag-header">
+                            <span class="diag-title">SYSTEM DIAGNOSTIC</span>
+                            <button class="diag-close"><i class="fa-solid fa-times"></i></button>
                         </div>
-
-                        <!-- RIGHT/BOTTOM: INTELLIGENCE CONSOLE -->
-                        <div class="pipeline-console" id="pipeline-console">
-                            <div class="console-header">
-                                <div class="console-tools">
-                                    <span class="tool-dot red"></span>
-                                    <span class="tool-dot yellow"></span>
-                                    <span class="tool-dot green"></span>
-                                </div>
-                                <span class="console-label">SYS.DIAGNOSTIC_V4</span>
-                            </div>
-                            <div class="console-display" id="console-display">
-                                <div class="console-scroller" id="console-content">
-                                    <!-- Dynamic Content -->
-                                    <div class="init-text">
-                                        > DETECTING NEURAL PATHWAYS...<br>
-                                        > AWAITING TRAJECTORY INPUT.<br>
-                                        <span class="blink">_</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="console-footer">
-                                <span class="mem-stat">MEM: 64TB</span>
-                                <span class="net-stat">NET: SECURE</span>
+                        <div class="diag-content">
+                            <p class="diag-desc" id="diag-desc-target"></p>
+                            <div class="diag-scan-line"></div>
+                            <div class="tech-specs" id="diag-specs">
+                                <!-- Injected via JS -->
                             </div>
                         </div>
                     </div>
@@ -346,112 +305,35 @@
         </section>
 
         <!-- PROJECTS / DEPLOYMENTS -->
-        <section class="section projects-section" id="projects">
-            <div class="container">
+        <!-- === SECTION 4: DEPLOYMENTS (Kinetic Stream V2.0) === -->
+        <section class="section kinetic-stream-container" id="projects">
+            <div class="container-fluid"> <!-- Full Width for Stream -->
                 <div class="section-header center" data-reveal>
                     <div class="section-tag">
                         <span class="tag-line"></span>
-                        <span>Deployments</span>
+                        <span>Active Deployments</span>
                     </div>
-                    <h2 class="section-title">Intelligence in Production</h2>
+                    <h2 class="section-title">Kinetic Project Stream</h2>
+                </div>
+
+                <!-- Navigation HUD (Floating) -->
+                <div class="stream-nav-hud">
+                    <button class="nav-btn prev" id="stream-prev"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="nav-btn next" id="stream-next"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+
+                <!-- The Kinetic Stream Container -->
+                <div class="kinetic-stream-wrapper" id="kinetic-stream-wrapper">
+                    <div class="kinetic-stream-track" id="kinetic-stream-track">
+                        <!-- Projects injected via JS -->
+                    </div>
                 </div>
                 
-                <div class="projects-showcase">
-                    <!-- Project 1 -->
-                    <article class="project-card" data-project="forecast" data-tilt>
-                        <div class="project-visual">
-                            <div class="visual-bg">
-                                <i class="fa-solid fa-chart-line"></i>
-                            </div>
-                            <div class="visual-overlay"></div>
-                            <div class="project-tags">
-                                <span>Time Series</span>
-                                <span>ARIMA</span>
-                                <span>Prophet</span>
-                            </div>
-                        </div>
-                        <div class="project-body">
-                            <h3>Sales Trend Forecasting</h3>
-                            <p>Predictive engine for retail optimization. Seasonal decomposition with 94% accuracy on Q4 projections.</p>
-                            <div class="project-kpis">
-                                <div class="kpi">
-                                    <span class="kpi-val">94%</span>
-                                    <span class="kpi-label">Accuracy</span>
-                                </div>
-                                <div class="kpi">
-                                    <span class="kpi-val">$2.1M</span>
-                                    <span class="kpi-label">Impact</span>
-                                </div>
-                            </div>
-                            <a href="#" class="project-link">
-                                Deep Dive <i class="fa-solid fa-arrow-right"></i>
-                            </a>
-                        </div>
-                    </article>
-                    
-                    <!-- Project 2 -->
-                    <article class="project-card" data-project="churn" data-tilt>
-                        <div class="project-visual">
-                            <div class="visual-bg">
-                                <i class="fa-solid fa-users-viewfinder"></i>
-                            </div>
-                            <div class="visual-overlay"></div>
-                            <div class="project-tags">
-                                <span>Classification</span>
-                                <span>XGBoost</span>
-                                <span>SHAP</span>
-                            </div>
-                        </div>
-                        <div class="project-body">
-                            <h3>Churn Prediction Engine</h3>
-                            <p>Proactive retention system analyzing 50k+ customer signals. Feature importance via SHAP analysis.</p>
-                            <div class="project-kpis">
-                                <div class="kpi">
-                                    <span class="kpi-val">82%</span>
-                                    <span class="kpi-label">Precision</span>
-                                </div>
-                                <div class="kpi">
-                                    <span class="kpi-val">-23%</span>
-                                    <span class="kpi-label">Churn Rate</span>
-                                </div>
-                            </div>
-                            <a href="#" class="project-link">
-                                Deep Dive <i class="fa-solid fa-arrow-right"></i>
-                            </a>
-                        </div>
-                    </article>
-                    
-                    <!-- Project 3 -->
-                    <article class="project-card" data-project="vision" data-tilt>
-                        <div class="project-visual">
-                            <div class="visual-bg">
-                                <i class="fa-solid fa-eye"></i>
-                            </div>
-                            <div class="visual-overlay"></div>
-                            <div class="project-tags">
-                                <span>CNN</span>
-                                <span>Computer Vision</span>
-                                <span>NumPy</span>
-                            </div>
-                        </div>
-                        <div class="project-body">
-                            <h3>MNIST From Scratch</h3>
-                            <p>Neural network implementation without frameworks. Mastering backpropagation mathematics firsthand.</p>
-                            <div class="project-kpis">
-                                <div class="kpi">
-                                    <span class="kpi-val">96%</span>
-                                    <span class="kpi-label">Accuracy</span>
-                                </div>
-                                <div class="kpi">
-                                    <span class="kpi-val">60k</span>
-                                    <span class="kpi-label">Samples</span>
-                                </div>
-                            </div>
-                            <a href="#" class="project-link">
-                                Deep Dive <i class="fa-solid fa-arrow-right"></i>
-                            </a>
-                        </div>
-                    </article>
+                <!-- Progress Rail -->
+                <div class="stream-progress-container">
+                    <div class="stream-progress-rail">
+                        <div class="stream-progress-bar" id="stream-progress-bar"></div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -504,60 +386,109 @@
         </section>
 
         <!-- === SECTION 6: CONTACT (Cards) === -->
-        <section class="section" id="contact">
-            <div class="container">
+        <!-- === SECTION 6: NEURAL UPLINK TERMINAL (V6.0) === -->
+        <!-- === SECTION 6: EXECUTIVE SCHEDULING INTERFACE (V7.0) === -->
+        <section class="section executive-scheduler-section" id="contact">
+            <div class="scheduler-grid-guide">
+                <!-- 12-col grid lines injected via CSS -->
+            </div>
+            
+            <div class="container scheduler-container">
                 <div class="section-header center" data-reveal>
                     <div class="section-tag">
                         <span class="tag-line"></span>
-                        <span>Transmission</span>
+                        <span>Tactical Sync</span>
                     </div>
-                    <h2 class="section-title">Initialize Contact</h2>
+                    <h2 class="section-title">Executive Scheduling</h2>
                 </div>
 
-                <div style="max-width: 600px; margin: 0 auto;">
-                    <div class="contact-cards">
-                        <div class="contact-main glass-card">
-                            <div class="contact-icon">
-                                <i class="fa-solid fa-satellite-dish"></i>
+                <div class="scheduler-interface">
+                    <!-- Split Pane: Protocol Form & Calendar -->
+                    <div class="scheduler-console glass-panel">
+                        <!-- Left: Transmission Protocol -->
+                        <div class="console-column left">
+                            <div class="console-header">
+                                <span class="status-indicator active"></span>
+                                <span class="console-title">TRANSMISSION_PROTOCOL</span>
                             </div>
-                            <h3>Open for Transmission</h3>
-                            <p>Seeking Data Science roles and challenging ML projects. Let's build something intelligent together.</p>
-                            <a href="mailto:renaldo@example.com" class="btn btn-plasma">
-                                <span class="btn-text">renaldo@example.com</span>
-                                <span class="btn-shine"></span>
-                            </a>
+                            
+                            <form class="scheduler-form" id="scheduler-form">
+                                <div class="form-row">
+                                    <div class="input-group">
+                                        <label for="s-name">IDENTITY</label>
+                                        <input type="text" id="s-name" placeholder="FULL_NAME" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="s-email">CONTACT_FREQ</label>
+                                        <input type="email" id="s-email" placeholder="EMAIL_ADDRESS" required>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label for="s-message">BRIEFING</label>
+                                    <textarea id="s-message" rows="3" placeholder="OBJECTIVE_SUMMARY..." required></textarea>
+                                </div>
+                                <div class="selected-slot-display" id="slot-display">
+                                    <span class="slot-label">TARGET_SLOT:</span>
+                                    <span class="slot-value">PENDING_SELECTION</span>
+                                </div>
+                                <button type="submit" class="btn btn-plasma scheduler-submit">
+                                    <span class="btn-text">CONFIRM APPOINTMENT</span>
+                                    <span class="btn-shine"></span>
+                                </button>
+                            </form>
                         </div>
                         
-                        <div class="social-grid">
-                            <a href="#" class="social-btn" title="GitHub">
-                                <i class="fa-brands fa-github"></i>
-                            </a>
-                            <a href="#" class="social-btn" title="LinkedIn">
-                                <i class="fa-brands fa-linkedin-in"></i>
-                            </a>
-                            <a href="#" class="social-btn" title="Twitter">
-                                <i class="fa-brands fa-twitter"></i>
-                            </a>
-                            <a href="#" class="social-btn" title="Kaggle">
-                                <i class="fa-brands fa-kaggle"></i>
-                            </a>
+                        <!-- Right: Availability Sync (Calendar) -->
+                        <div class="console-column right">
+                            <div class="console-header">
+                                <span class="status-indicator cyan"></span>
+                                <span class="console-title">AVAILABILITY_SYNC</span>
+                            </div>
+                            <div class="calendar-widget" id="calendar-widget">
+                                <!-- Calendar Generated via JS -->
+                            </div>
                         </div>
+                    </div>
+
+                    <!-- Professional Access Ports (The Dock) -->
+                    <div class="access-dock">
+                        <a href="https://linkedin.com/in/renaldo" target="_blank" class="dock-item" data-port="LINKEDIN">
+                            <div class="dock-icon"><i class="fa-brands fa-linkedin-in"></i></div>
+                            <div class="dock-meta">
+                                <span class="dock-label">LINKEDIN</span>
+                                <span class="dock-status">CONNECTION_READY</span>
+                            </div>
+                        </a>
+                        <a href="https://github.com/renaldo" target="_blank" class="dock-item" data-port="GITHUB">
+                            <div class="dock-icon"><i class="fa-brands fa-github"></i></div>
+                            <div class="dock-meta">
+                                <span class="dock-label">GITHUB</span>
+                                <span class="dock-status">REPO_ACCESS</span>
+                            </div>
+                        </a>
+                        <a href="mailto:renaldo@example.com" class="dock-item" data-port="EMAIL">
+                            <div class="dock-icon"><i class="fa-solid fa-envelope"></i></div>
+                            <div class="dock-meta">
+                                <span class="dock-label">EMAIL_RELAY</span>
+                                <span class="dock-status">SMTP_OPEN</span>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- === FOOTER === -->
-    <footer class="site-footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">RENALDO ARAPI<span class="gradient-text">.AI</span></div>
-                <div class="footer-status">
-                    <span class="pulse-dot"></span>
-                    <span>All Systems Operational</span>
-                </div>
-                <div class="footer-copy">&copy; 2025. Engineered with precision.</div>
+    <!-- === SYSTEM FOOTER (EXECUTIVE STATUS) === -->
+    <footer class="executive-footer">
+        <div class="container footer-grid">
+            <div class="footer-col left">
+                <span class="sys-clock" id="sys-clock">00:00:00 UTC</span>
+                <span class="sys-separator">|</span>
+                <span class="sys-integrity">SYSTEM INTEGRITY: 100%</span>
+            </div>
+            <div class="footer-col right">
+                <span class="sys-copyright">ENGINEERED BY RENALDO ARAPI // V1.2.0-STABLE</span>
             </div>
         </div>
     </footer>
@@ -571,6 +502,48 @@
         </div>
     </div>
 
+    <!-- === PROJECT DEEP DIVE MODAL === -->
+    <div class="project-modal" id="project-modal">
+        <div class="modal-backdrop" id="modal-backdrop"></div>
+        <div class="modal-glass-panel">
+            <button class="modal-close" id="modal-close"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="modal-content-grid">
+                <!-- Visual Column -->
+                <div class="modal-visual">
+                    <div class="blueprint-grid"></div>
+                    <div class="modal-icon-wrapper">
+                        <i class="fa-solid fa-network-wired" id="modal-icon"></i>
+                    </div>
+                    <div class="modal-status" id="modal-status">PROD_LIVE</div>
+                </div>
+
+                <!-- Data Column -->
+                <div class="modal-data">
+                    <h2 class="modal-title" id="modal-title">PROJECT_TITLE</h2>
+                    <div class="modal-tags" id="modal-tags">
+                        <!-- Tags injected via JS -->
+                    </div>
+                    
+                    <div class="modal-kpi-row" id="modal-kpis">
+                        <!-- KPIs injected via JS -->
+                    </div>
+
+                    <p class="modal-desc" id="modal-desc">
+                        Project description goes here.
+                    </p>
+
+                    <a href="#" class="btn btn-plasma modal-cta">
+                        <span class="btn-text">Initialize Demo</span>
+                        <span class="btn-icon"><i class="fa-solid fa-bolt"></i></span>
+                        <span class="btn-shine"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/kinetic-stream.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
