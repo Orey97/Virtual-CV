@@ -266,19 +266,12 @@ class GoogleLiveAdapter extends ICalendarAdapter {
         return slots;
     }
 
-    // Write to Booking API (Existing Logic)
+    // Write to Booking API (V4.0 Service Account Logic)
     async createBooking(payload) {
-        // Reuse the existing /api/book implementation which handles the write
-        // Note: usage of /api/book requires GOOGLE_REFRESH_TOKEN env var setup separately
-        // or we can migrate /api/book to use Service Account too. 
-        // For the purpose of "Calendar Read", we strictly use Service Account.
-        // For "Calendar Write", the existing flow via Refresh Token is actually safer for user attribution,
-        // BUT if the goal is Service Account for everything, we should update createBooking too.
-        // Assuming /api/book remains as is for now (Hybrid approach is common).
+        console.log('[System] Transmitting Booking Payload to /api/calendar...');
         
-        console.log('[System] Transmitting Booking Payload to /api/book...');
         try {
-            const response = await fetch('/api/book', {
+            const response = await fetch('/api/calendar', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -290,8 +283,17 @@ class GoogleLiveAdapter extends ICalendarAdapter {
                     timezone: payload.time.timezone
                 })
             });
+
             const data = await response.json();
-            if (!response.ok) throw new Error(data.error || 'API Error');
+            
+            if (!response.ok) {
+                // Specific Handling for Credential Failure
+                if (response.status === 503) {
+                    console.warn('[System] Backend 503: Service Account Missing');
+                    return { status: 'OFFLINE_MODE', error: 'Service credentials not active', isFallback: true };
+                }
+                throw new Error(data.error || 'Uplink Error');
+            }
 
             return {
                 id: data.eventId,
