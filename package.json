@@ -1,0 +1,19 @@
+{
+  "name": "virtual-cv-portfolio",
+  "version": "1.0.0",
+  "description": "Virtual CV Portfolio with Google Calendar Integration",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "googleapis": "^128.0.0"
+  },
+  "devDependencies": {
+    "vercel": "^32.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

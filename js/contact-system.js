@@ -268,33 +268,59 @@ class GoogleLiveAdapter extends ICalendarAdapter {
 
     // Write to Booking API (V4.0 Service Account Logic)
     async createBooking(payload) {
-        console.log('[System] Transmitting Booking Payload to /api/calendar...');
+        console.group('%c[UPLINK] TRANSMITTING BOOKING REQUEST', 'color: #00f0ff; background: #000; padding: 4px;');
+        console.log('Endpoint: POST /api/calendar');
+        console.log('Payload:', payload);
+        console.groupEnd();
         
         try {
+            // Construct the payload with exact key names expected by backend
+            const requestBody = {
+                name: payload.identity,
+                email: payload.contact,
+                briefing: payload.briefing,
+                date: payload.time.start,      // Format: "YYYY-MM-DD"
+                startTime: payload.time.slot,  // Format: "HH:00" or "H:00"
+                timezone: payload.time.timezone
+            };
+            
+            console.log('[UPLINK] Request Body:', JSON.stringify(requestBody, null, 2));
+            
             const response = await fetch('/api/calendar', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    name: payload.identity,
-                    email: payload.contact,
-                    briefing: payload.briefing,
-                    date: payload.time.start,
-                    startTime: payload.time.slot,
-                    timezone: payload.time.timezone
-                })
+                body: JSON.stringify(requestBody)
             });
 
             const data = await response.json();
             
+            console.group('%c[UPLINK] RESPONSE RECEIVED', response.ok ? 'color: #00ff88;' : 'color: #ff4444;');
+            console.log('Status:', response.status);
+            console.log('Data:', data);
+            console.groupEnd();
+            
             if (!response.ok) {
-                // Specific Handling for Credential Failure
+                // Specific Handling for different error codes
                 if (response.status === 503) {
-                    console.warn('[System] Backend 503: Service Account Missing');
+                    console.warn('[UPLINK] Backend 503: Service Account Missing');
                     return { status: 'OFFLINE_MODE', error: 'Service credentials not active', isFallback: true };
+                }
+                if (response.status === 403) {
+                    console.error('[UPLINK] 403 FORBIDDEN: Service Account lacks calendar write permission');
+                    return { status: 'PERMISSION_DENIED', error: data.error || 'Calendar write access denied' };
+                }
+                if (response.status === 400) {
+                    console.error('[UPLINK] 400 BAD REQUEST:', data.error);
+                    return { status: 'VALIDATION_ERROR', error: data.error || 'Invalid request data' };
                 }
                 throw new Error(data.error || 'Uplink Error');
             }
 
+            // SUCCESS: Event was created
+            console.log('%c[UPLINK] EVENT CREATED SUCCESSFULLY', 'color: #00ff88; font-weight: bold;');
+            console.log('Event ID:', data.eventId);
+            console.log('Calendar Link:', data.link);
+            
             return {
                 id: data.eventId,
                 status: 'CONFIRMED',
@@ -303,8 +329,9 @@ class GoogleLiveAdapter extends ICalendarAdapter {
                 timestamp: new Date().toISOString()
             };
         } catch (error) {
-            console.error('[System] Live Sync Failed:', error);
-            return { status: 'LOCAL_FALLBACK', error: error.message };
+            console.error('%c[UPLINK] CRITICAL FAILURE', 'color: #ff4444; font-weight: bold;');
+            console.error('Error:', error.message);
+            return { status: 'FAILED', error: error.message };
         }
     }
 }
@@ -540,6 +567,7 @@ class ContactInterface {
         this.form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
+            // VALIDATION: Ensure date & time are selected
             if (!this.selectedDate || !this.selectedSlot) {
                 alert('SYSTEM ERROR: Complete booking coordinates (Date & Time) required.');
                 return;
@@ -547,41 +575,105 @@ class ContactInterface {
 
             const btn = this.form.querySelector('.scheduler-submit');
             const originalText = btn.innerHTML;
-            btn.innerHTML = `<span class="btn-text">SECURING UPLINK...</span>`;
             
+            // STATE: TRANSMITTING
+            btn.innerHTML = `<span class="btn-text"><i class="fa-solid fa-circle-notch fa-spin"></i> TRANSMITTING...</span>`;
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+            
+            // CONSTRUCT PAYLOAD
             const payload = {
                 identity: document.getElementById('s-name').value,
                 contact: document.getElementById('s-email').value,
                 briefing: document.getElementById('s-message').value,
                 time: {
-                    start: this.selectedDate,
-                    slot: this.selectedSlot,
+                    start: this.selectedDate,  // "YYYY-MM-DD"
+                    slot: this.selectedSlot,   // "HH:00"
                     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
                 }
             };
 
+            // EXECUTE BOOKING
             const result = await this.service.createBooking(payload);
 
+            // HANDLE RESPONSE STATES
             if (result.status === 'CONFIRMED') {
-                btn.innerHTML = `<span class="btn-text" style="color:var(--c-success)">ALIGNMENT SECURED</span>`;
+                // SUCCESS: Event was created on Google Calendar
+                btn.innerHTML = `<span class="btn-text" style="color:var(--c-success)"><i class="fa-solid fa-check-circle"></i> ALIGNMENT CONFIRMED</span>`;
+                btn.style.borderColor = 'var(--c-success)';
                 
                 alert(
                     `[SYSTEM NOTIFICATION]\n\n` +
-                    `ALIGNMENT CONFIRMED.\n` +
-                    `--------------------------------\n` +
+                    `✓ ALIGNMENT CONFIRMED\n` +
+                    `================================\n` +
                     `DATE:       ${this.selectedDate}\n` +
                     `TIME:       ${this.selectedSlot}\n` +
-                    `STATUS:     SYNCED_LOCALLY\n` +
+                    `STATUS:     SYNCED_TO_GOOGLE_CALENDAR\n` +
+                    `EVENT ID:   ${result.id}\n` +
                     `\n` +
-                    `NOTE: Time slot reserved in local state. No external Google Calendar API write occurred.`
+                    `Calendar invitation sent to your email.`
                 );
+                
+                // Reset after success
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    btn.style.opacity = '';
+                    btn.style.borderColor = '';
+                    this.form.reset();
+                    this.selectedDate = null;
+                    this.selectedSlot = null;
+                    this.renderCalendar(this.currentDate);
+                }, 3000);
+                
+            } else if (result.status === 'OFFLINE_MODE' || result.isFallback) {
+                // OFFLINE: Service Account not configured
+                btn.innerHTML = `<span class="btn-text" style="color:var(--c-warning)"><i class="fa-solid fa-exclamation-triangle"></i> OFFLINE MODE</span>`;
+                btn.style.borderColor = 'var(--c-warning)';
+                
+                console.warn('[UI] Operating in OFFLINE mode - Backend credentials not configured');
+                
+                alert(
+                    `[SYSTEM NOTIFICATION]\n\n` +
+                    `⚠ OFFLINE MODE ACTIVE\n` +
+                    `================================\n` +
+                    `The booking system is currently operating in demo mode.\n` +
+                    `Your request was NOT synced to Google Calendar.\n` +
+                    `\n` +
+                    `Please contact the administrator.`
+                );
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    btn.style.opacity = '';
+                    btn.style.borderColor = '';
+                }, 3000);
+                
+            } else {
+                // FAILURE: Backend error
+                btn.innerHTML = `<span class="btn-text" style="color:var(--c-danger)"><i class="fa-solid fa-times-circle"></i> UPLINK FAILED</span>`;
+                btn.style.borderColor = 'var(--c-danger)';
+                
+                console.error('[UI] Booking failed:', result.error);
+                
+                alert(
+                    `[SYSTEM ERROR]\n\n` +
+                    `✗ TRANSMISSION FAILED\n` +
+                    `================================\n` +
+                    `Status: ${result.status}\n` +
+                    `Error: ${result.error || 'Unknown error'}\n` +
+                    `\n` +
+                    `Please check the browser console for details.`
+                );
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    btn.style.opacity = '';
+                    btn.style.borderColor = '';
+                }, 3000);
             }
-
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                this.form.reset();
-                this.renderCalendar(this.currentDate);
-            }, 3000);
         });
     }
 }
