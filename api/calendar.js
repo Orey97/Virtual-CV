@@ -201,9 +201,6 @@ async function handlePost(req, res) {
                 dateTime: endDateTime.toISOString(),
                 timeZone: eventTimezone
             },
-            attendees: [
-                { email: email }
-            ],
             reminders: {
                 useDefault: false,
                 overrides: [
@@ -219,7 +216,7 @@ async function handlePost(req, res) {
         const result = await calendar.events.insert({
             calendarId: calendarId,
             resource: event,
-            sendUpdates: 'all' // Send email notifications to attendees
+            // sendUpdates: 'all' <-- REMOVED to prevent "Forbidden" error on personal accounts
         });
         
         console.log('[CALENDAR_API] Event created successfully:', result.data.id);
