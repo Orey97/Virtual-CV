@@ -122,7 +122,14 @@ async function handlePost(req, res) {
             });
         }
         
-        console.log('[CALENDAR_API] Payload received:', { name, email, date, startTime, timezone });
+        
+        console.log('[CALENDAR_API] Processing request for:', {
+            date,
+            startTime,
+            timezone,
+            hasName: !!name,
+            hasEmail: !!email
+        }); // LOGGING METADATA ONLY - NO PII
         
         // AUTHENTICATION: Get write-enabled auth client
         const auth = getAuthClient(['https://www.googleapis.com/auth/calendar']);
@@ -137,12 +144,12 @@ async function handlePost(req, res) {
         // Input: date = "2026-01-10", startTime = "14:00" or "14:00"
         // Output: ISO 8601 timestamps for Google Calendar
         
-        // Normalize startTime to HH:MM format
         let normalizedTime = startTime;
         if (startTime.includes(':')) {
             // "9:00" -> "09:00" or "14:00" -> "14:00"
             const [hours, mins] = startTime.split(':');
             normalizedTime = `${hours.padStart(2, '0')}:${mins.padStart(2, '0')}`;
+
         } else {
             // "9" -> "09:00"
             normalizedTime = `${startTime.padStart(2, '0')}:00`;

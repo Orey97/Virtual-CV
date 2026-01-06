@@ -319,9 +319,13 @@ class KineticStream {
         
         // Tags
         const tagsContainer = document.getElementById('modal-tags');
-        tagsContainer.innerHTML = project.stack.map(tag => 
-            `<span class="modal-tag">${tag}</span>`
-        ).join('');
+        tagsContainer.innerHTML = '';
+        project.stack.forEach(tag => {
+            const span = document.createElement('span');
+            span.className = 'modal-tag';
+            span.textContent = tag;
+            tagsContainer.appendChild(span);
+        });
         
         // KPIs
         const kpisContainer = document.getElementById('modal-kpis');
@@ -331,16 +335,27 @@ class KineticStream {
         const val = kpiParts[0];
         const label = kpiParts.slice(1).join(' ');
         
-        kpisContainer.innerHTML = `
-            <div class="modal-kpi-item">
-                <span class="kpi-val">${val}</span>
-                <span class="kpi-label">${label}</span>
-            </div>
-            <div class="modal-kpi-item">
-                <span class="kpi-val">Global</span>
-                <span class="kpi-label">Availability</span>
-            </div>
-        `;
+        kpisContainer.innerHTML = '';
+        
+        const kpiItem1 = document.createElement('div');
+        kpiItem1.className = 'modal-kpi-item';
+        kpiItem1.innerHTML = `<span class="kpi-val">${val}</span><span class="kpi-label">${label}</span>`;
+        // Since val/label come from split string of hardcoded config, fairly safe, 
+        // but let's be cleaner:
+        kpiItem1.innerHTML = '';
+        const valSpan = document.createElement('span');
+        valSpan.className = 'kpi-val';
+        valSpan.textContent = val;
+        const labelSpan = document.createElement('span');
+        labelSpan.className = 'kpi-label';
+        labelSpan.textContent = label;
+        kpiItem1.append(valSpan, labelSpan);
+
+        const kpiItem2 = document.createElement('div');
+        kpiItem2.className = 'modal-kpi-item';
+        kpiItem2.innerHTML = '<span class="kpi-val">Global</span><span class="kpi-label">Availability</span>';
+        
+        kpisContainer.append(kpiItem1, kpiItem2);
 
         // Animate In
         this.modal.classList.add('active');

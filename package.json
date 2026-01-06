@@ -4,13 +4,17 @@
   "description": "Virtual CV Portfolio with Google Calendar Integration",
   "main": "index.html",
   "scripts": {
-    "dev": "vercel dev",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "deploy": "vercel --prod"
   },
   "dependencies": {
     "googleapis": "^128.0.0"
   },
   "devDependencies": {
+    "vite": "^5.0.0",
+    "terser": "^5.0.0",
     "vercel": "^32.0.0"
   },
   "engines": {

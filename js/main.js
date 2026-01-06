@@ -115,12 +115,27 @@ class SystemLattice {
         this.createNodes();
         
         window.addEventListener('resize', () => this.resize());
+        let tickingScroll = false;
         window.addEventListener('scroll', () => {
-            this.scrollY = window.scrollY;
+             if (!tickingScroll) {
+                 window.requestAnimationFrame(() => {
+                     this.scrollY = window.scrollY;
+                     tickingScroll = false;
+                 });
+                 tickingScroll = true;
+             }
         });
+
+        let tickingMouse = false;
         window.addEventListener('mousemove', (e) => {
-            this.mouseX = e.clientX;
-            this.mouseY = e.clientY;
+             if (!tickingMouse) {
+                 window.requestAnimationFrame(() => {
+                     this.mouseX = e.clientX;
+                     this.mouseY = e.clientY;
+                     tickingMouse = false;
+                 });
+                 tickingMouse = true;
+             }
         });
 
         this.animate();
@@ -1174,7 +1189,7 @@ document.addEventListener('DOMContentLoaded', () => {
     new NeuralArchitect();
     new KineticStream(); // V2.0 Deployment Stream
     // ExecutiveScheduler initialization moved to contact-system.js
-    new NeuralAlignmentSimulator('research-lab'); // V16.0 Research Lab
+    // new NeuralAlignmentSimulator('research-lab'); // REMOVED: Class definition missing, preventing crash.
     
     // Add reveal class for CSS animations
     document.querySelectorAll('[data-reveal]').forEach((el, i) => {
