@@ -2,7 +2,6 @@
   "name": "virtual-cv-portfolio",
   "version": "1.0.0",
   "description": "Virtual CV Portfolio with Google Calendar Integration",
-  "main": "index.html",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
