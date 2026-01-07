@@ -1,15 +1,15 @@
 /* === NEURAL DIAGNOSTIC ARCHITECT V8 CSS === */
 
 :root {
-    --c-hud-bg: rgba(5, 8, 14, 0.95);
-    --c-hud-border: rgba(0, 240, 255, 0.3);
-    --c-signal: #00f0ff;
-    --c-purple: #8b5cf6;
-    --c-dim: rgba(255,255,255,0.05);
-    --font-term: 'Courier New', monospace;
-    --c-synapse-idle: rgba(0, 240, 255, 0.05);
-    --c-synapse-active: #00f0ff;
-    --font-header: 'JetBrains Mono', monospace; /* V8 Header Font */
+    --c-hud-bg: rgba(255, 255, 255, 0.95);
+    --c-hud-border: rgba(0, 0, 0, 0.2);
+    --c-signal: #0891b2; /* Darker Cyan for Light Mode */
+    --c-purple: #7c3aed;
+    --c-dim: rgba(0, 0, 0, 0.05);
+    --font-term: 'Code Saver', monospace;
+    --c-synapse-idle: rgba(0, 0, 0, 0.1);
+    --c-synapse-active: #0891b2;
+    --font-header: 'Code Saver', monospace;
 }
 
 /* === MAIN CONTAINER === */
@@ -49,8 +49,8 @@
 
 /* === SECTOR COLUMN === */
 .sector-column {
-    background: rgba(10, 15, 23, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(241, 245, 249, 0.6); /* Slate-100 transparent */
+    border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: 4px;
     padding: 0;
     backdrop-filter: blur(20px);
@@ -62,7 +62,7 @@
 .sector-header {
     margin-bottom: 20px;
     padding-bottom: 10px;
-    border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .sector-title {
@@ -71,7 +71,7 @@
     letter-spacing: 2px;
     color: var(--c-signal);
     text-transform: uppercase;
-    text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+    text-shadow: none; /* Removed glow for legibility */
 }
 
 .sector-body {
@@ -84,17 +84,19 @@
 /* === V11 ULTRA-GRADE NODES === */
 .neural-node {
     position: relative;
-    background: linear-gradient(165deg, rgba(8, 12, 18, 0.7) 0%, rgba(20, 25, 35, 0.4) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(165deg, #ffffff 0%, #f1f5f9 100%);
+    border: 1px solid rgba(0, 0, 0, 0.08);
     /* Tech chamfer/radius mix */
     border-radius: 2px 12px 2px 12px;
     padding: 18px;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-    backdrop-filter: blur(12px);
+    /* backdrop-filter removed for performance (opaque bg) */
     margin-bottom: 20px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+    overflow: hidden;
+    /* box-shadow removed for perf */
 }
 
 /* Holographic Shine Gradient */
@@ -105,7 +107,7 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.03), transparent);
     transition: left 0.6s ease;
     pointer-events: none;
 }
@@ -126,9 +128,9 @@
 
 .neural-node:hover {
     transform: translateY(-4px) scale(1.02);
-    border-color: rgba(0, 240, 255, 0.4);
-    box-shadow: 0 10px 40px rgba(0, 240, 255, 0.08);
-    background: linear-gradient(165deg, rgba(8, 12, 18, 0.9) 0%, rgba(10, 40, 50, 0.3) 100%);
+    border-color: var(--c-signal);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    background: linear-gradient(165deg, #ffffff 0%, #e2e8f0 100%);
 }
 
 .neural-node:hover::before {
@@ -141,20 +143,21 @@
     border-color: var(--c-signal);
     opacity: 0.1;
     border-radius: 2px 12px 2px 12px;
-    background: radial-gradient(circle at bottom right, rgba(0, 240, 255, 0.05), transparent 40%);
+    background: rgba(8, 145, 178, 0.05); /* Flat color instead of radial gradient */
 }
 
 /* Active State (Omni-Link) */
 .neural-node.active-link {
     opacity: 1;
-    border-color: #fff;
-    background: rgba(10, 20, 30, 0.9);
-    box-shadow: 0 0 25px rgba(0, 240, 255, 0.15), inset 0 0 10px rgba(0, 240, 255, 0.05);
+    border-color: var(--c-signal);
+    background: #f0f9ff;
+    background: #f0f9ff;
+    box-shadow: 0 0 10px rgba(8, 145, 178, 0.1);
 }
 
 .neural-node.active-link .node-name {
     color: var(--c-signal);
-    text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+    text-shadow: none;
 }
 
 .neural-node.active-link::after {
@@ -162,12 +165,12 @@
     border-color: var(--c-signal);
     width: 20px;
     height: 20px;
-    box-shadow: 2px 2px 10px var(--c-signal);
+    box-shadow: none;
 }
 
 .neural-node.dimmed {
-    opacity: 0.1;
-    filter: grayscale(100%) brightness(0.5);
+    opacity: 0.3;
+    filter: grayscale(100%);
     transform: scale(0.98);
 }
 
@@ -177,14 +180,14 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 14px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     padding-bottom: 8px;
 }
 
 .node-name {
     font-family: var(--font-header);
     font-weight: 700;
-    color: #e2e8f0;
+    color: #0f172a; /* Slate 900 */
     font-size: 0.95rem;
     letter-spacing: 0.5px;
     transition: color 0.3s ease;
@@ -207,7 +210,7 @@
 .node-mastery-track {
     width: 100%;
     height: 4px; /* Thicker */
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.1);
     border-radius: 2px;
     overflow: hidden;
     position: relative;
@@ -222,10 +225,10 @@
     background: linear-gradient(90deg, var(--c-purple), var(--c-signal));
     width: 0%;
     transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
-    box-shadow: 0 0 10px var(--c-signal);
+    box-shadow: 0 0 5px var(--c-signal);
 }
 
-/* === V12 MAGLEV SYNAPSE SYSTEM === */
+/* === V12 MAGLEV SYNAPSE SYSTEM (Optimized Unified Path) === */
 .synapse-layer {
     position: absolute;
     top: 0;
@@ -237,44 +240,26 @@
     overflow: visible;
 }
 
-/* Layer 1: The Rail (Hardware) */
-.synapse-rail {
+/* Unified Path: Handles both idle and active states */
+.synapse-link {
     fill: none;
-    stroke: var(--c-signal);
+    stroke: var(--c-text-muted); /* Idle Color */
     stroke-width: 1px;
-    stroke-dasharray: 2 4; /* Micro-dashed look */
-    opacity: 0.1;
-    transition: opacity 0.4s ease;
+    stroke-dasharray: none; /* Perf: Solid line when idle */
+    opacity: 0.2;
+    transition: all 0.4s ease;
+    will-change: stroke-dashoffset; /* Hint browser for animation */
 }
 
-/* Layer 2: The Pulse (Energy) */
-.synapse-pulse {
-    fill: none;
-    stroke: #fff;
-    stroke-width: 0;
-    /* Simulate a traveling particle using massive dash-gap */
-    stroke-dasharray: 0 500; 
-    stroke-linecap: round;
-    opacity: 0;
-    filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 8px var(--c-signal));
-    transition: opacity 0.2s ease;
-}
-
-/* === ACTIVE STATE (Hover) === */
-
-/* Rail Activation */
-.synapse-rail.active {
-    opacity: 0.4;
-    stroke: var(--c-purple);
-}
-
-/* Pulse Activation */
-.synapse-pulse.active {
+/* Active State: Transforms into Energy Pulse */
+.synapse-link.active {
+    stroke: var(--c-signal); /* Active Color */
+    stroke-width: 2px;
     opacity: 1;
-    stroke-width: 3px;
-    animation: maglevShot 1.5s linear infinite;
     /* Create the "Comet" head: 60px solid, remaining gap */
     stroke-dasharray: 60 400; 
+    animation: maglevShot 1.5s linear infinite;
+    filter: drop-shadow(0 0 4px var(--c-signal)); /* Add glow via filter */
 }
 
 @keyframes maglevShot {
@@ -289,7 +274,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(5, 10, 15, 0.95);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
     z-index: 1000;
     display: flex;
@@ -308,11 +293,11 @@
 .diag-terminal {
     width: 800px;
     max-width: 90%;
-    background: #0a0f14;
+    background: #ffffff;
     border: 1px solid var(--c-signal);
     padding: 40px;
     position: relative;
-    box-shadow: 0 0 50px rgba(0, 240, 255, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 }
 
 .diag-header {
@@ -320,7 +305,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     padding-bottom: 15px;
 }
 
@@ -334,7 +319,7 @@
 .diag-close {
     background: none;
     border: none;
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--c-text-muted);
     font-size: 1.5rem;
     cursor: pointer;
     transition: color 0.3s;
@@ -345,10 +330,10 @@
 }
 
 .diag-desc {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-term);
     font-size: 1.1rem;
     line-height: 1.6;
-    color: #ccc;
+    color: #334155;
     margin-bottom: 30px;
     min-height: 60px;
 }
@@ -377,12 +362,12 @@
 .spec-label {
     font-family: var(--font-header);
     font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.4);
+    color: #64748b;
 }
 
 .spec-item span:last-child {
     font-family: var(--font-header);
-    color: #fff;
+    color: #0f172a;
     font-size: 0.9rem;
 }
 

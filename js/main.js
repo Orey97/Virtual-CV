@@ -27,28 +27,10 @@ const CONFIG = {
 // STATE MANAGEMENT
 // ============================================
 const State = {
-    depth: 1,
-    xp: 0,
     explored: new Set(),
     scrollY: 0,
     mouseX: 0,
-    mouseY: 0,
-    
-    addXP(amount, reason = '') {
-        this.xp += amount;
-        this.updateDepth();
-        UI.updateProgress();
-        if (reason) UI.showToast('Insight Acquired', reason);
-    },
-    
-    updateDepth() {
-        const newDepth = Math.floor(this.xp / 150) + 1;
-        if (newDepth > this.depth) {
-            this.depth = newDepth;
-            UI.updateDepth(newDepth);
-            UI.showToast('System Upgrade', `Neural Depth Level ${newDepth}`);
-        }
-    }
+    mouseY: 0
 };
 
 // ============================================
@@ -57,26 +39,7 @@ const State = {
 const UI = {
     init() {
         this.scrollIndicator = document.getElementById('scroll-indicator');
-        this.depthProgress = document.getElementById('depth-progress');
-        this.depthValue = document.getElementById('depth-value');
         this.toast = document.getElementById('achievement-toast');
-    },
-    
-    updateProgress() {
-        if (!this.scrollIndicator) return;
-        const percent = (State.xp % 150) / 150 * 100;
-        this.scrollIndicator.style.width = `${percent}%`;
-    },
-    
-    updateDepth(depth) {
-        if (!this.depthValue) return;
-        this.depthValue.textContent = depth;
-        
-        // Animate ring
-        if (this.depthProgress) {
-            const offset = 100 - (State.xp % 150) / 150 * 100;
-            this.depthProgress.style.strokeDashoffset = offset;
-        }
     },
     
     showToast(title, desc) {
@@ -153,7 +116,9 @@ class SystemLattice {
     createNodes() {
         // Density: "Sparse but intentional"
         // Reduced count to ensure calm, instrument-grade atmosphere
-        const nodeCount = Math.min(250, Math.floor(this.width / 3));
+        // Density: "Sparse but intentional"
+        // Reduced count to ensure calm, instrument-grade atmosphere
+        const nodeCount = Math.min(100, Math.floor(this.width / 8));
         this.nodes = [];
         
         for (let i = 0; i < nodeCount; i++) {
@@ -267,17 +232,26 @@ class ScrollAnimations {
     
     init() {
         // Navigation scroll indicator
+        // Navigation scroll indicator (Debounced)
+        let scrollTicking = false;
         window.addEventListener('scroll', () => {
-            const scrolled = window.scrollY;
-            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-            const percent = (scrolled / maxScroll) * 100;
-            
-            const indicator = document.getElementById('scroll-indicator');
-            if (indicator) indicator.style.width = `${percent}%`;
-            
-            // Nav background
-            const nav = document.getElementById('nav-header');
-            if (nav) nav.classList.toggle('scrolled', scrolled > 50);
+            if (!scrollTicking) {
+                window.requestAnimationFrame(() => {
+                    const scrolled = window.scrollY;
+                    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+                    const percent = (scrolled / maxScroll) * 100;
+                    
+                    const indicator = document.getElementById('scroll-indicator');
+                    if (indicator) indicator.style.width = `${percent}%`;
+                    
+                    // Nav background
+                    const nav = document.getElementById('nav-header');
+                    if (nav) nav.classList.toggle('scrolled', scrolled > 50);
+                    
+                    scrollTicking = false;
+                });
+                scrollTicking = true;
+            }
         });
         
         // Intersection Observer for reveals
@@ -495,7 +469,6 @@ class SkillNodes {
                 const skill = node.dataset.skill;
                 if (!State.explored.has(`skill-${skill}`)) {
                     State.explored.add(`skill-${skill}`);
-                    State.addXP(15, `Explored ${skill}`);
                 }
             });
         });
@@ -516,7 +489,6 @@ class ProjectCards {
                 const project = card.dataset.project;
                 if (!State.explored.has(`project-${project}`)) {
                     State.explored.add(`project-${project}`);
-                    State.addXP(30, `Analyzed ${project} project`);
                 }
             });
         });
@@ -819,22 +791,15 @@ class NeuralArchitect {
 
                     const d = `M ${startX} ${startY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${endX} ${endY}`;
 
-                    // PATH 1: The Rail (Hardware Structure)
-                    const rail = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                    rail.setAttribute('d', d);
-                    rail.setAttribute('class', 'synapse-rail');
-                    rail.setAttribute('data-source', sourceId);
-                    rail.setAttribute('data-target', targetId);
+                    // UNIFIED PATH: Handles both rail structure and energy pulse
+                    // Optimized: Single DOM node per connection instead of two
+                    const synapse = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    synapse.setAttribute('d', d);
+                    synapse.setAttribute('class', 'synapse-link'); // Unified class
+                    synapse.setAttribute('data-source', sourceId);
+                    synapse.setAttribute('data-target', targetId);
                     
-                    // PATH 2: The Pulse (Energy Data)
-                    const pulse = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                    pulse.setAttribute('d', d);
-                    pulse.setAttribute('class', 'synapse-pulse');
-                    pulse.setAttribute('data-source', sourceId);
-                    pulse.setAttribute('data-target', targetId);
-                    
-                    this.svgLayer.appendChild(rail);
-                    this.svgLayer.appendChild(pulse);
+                    this.svgLayer.appendChild(synapse);
                 }
             });
         });
@@ -887,9 +852,8 @@ class NeuralArchitect {
                     }
                 });
 
-                // 2. Highlight Synapses (Dual-Layer)
-                const rails = this.svgLayer.querySelectorAll('.synapse-rail');
-                const pulses = this.svgLayer.querySelectorAll('.synapse-pulse');
+                // 2. Highlight Synapses (Unified Layer)
+                const synapses = this.svgLayer.querySelectorAll('.synapse-link');
                 
                 // Helper to toggle
                 const toggle = (el) => {
@@ -899,8 +863,7 @@ class NeuralArchitect {
                     else el.classList.remove('active');
                 };
 
-                rails.forEach(toggle);
-                pulses.forEach(toggle);
+                synapses.forEach(toggle);
             });
 
             node.addEventListener('mouseleave', () => {
@@ -918,7 +881,7 @@ class NeuralArchitect {
                 });
                 
                 // Deactivate all paths
-                this.svgLayer.querySelectorAll('.synapse-rail, .synapse-pulse').forEach(el => {
+                this.svgLayer.querySelectorAll('.synapse-link').forEach(el => {
                     el.classList.remove('active');
                 });
             });
@@ -955,9 +918,8 @@ class NeuralArchitect {
         const node = this.findData(id);
         if (!node) return;
 
-        // V8 Gamification: XP only on first visit
+        // Track visited nodes
         if (!this.visitedNodes.has(id)) {
-            State.addXP(50, `System Diagnostic: ${node.name}`);
             this.visitedNodes.add(id);
         }
 

@@ -5,34 +5,34 @@
 
 /* === ROOT VARIABLES === */
 :root {
-    /* Color System - Deep Space */
-    --c-void: #020408;
-    --c-space: #060910;
-    --c-surface: #0e121b;
-    --c-surface-2: #161b26;
-    --c-border: rgba(255, 255, 255, 0.05);
-    --c-border-active: rgba(255, 255, 255, 0.1);
+    /* Color System - White Lab / Paper */
+    --c-void: #ffffff;
+    --c-space: #f8fafc;
+    --c-surface: #f1f5f9;
+    --c-surface-2: #e2e8f0;
+    --c-border: rgba(0, 0, 0, 0.08);
+    --c-border-active: rgba(0, 0, 0, 0.15);
     
-    /* Accent Spectrum */
-    --c-primary: #3b82f6;
-    --c-primary-dim: rgba(59, 130, 246, 0.1);
-    --c-primary-glow: rgba(59, 130, 246, 0.25);
-    --c-accent: #06b6d4;
-    --c-accent-glow: rgba(6, 182, 212, 0.25);
-    --c-purple: #8b5cf6;
-    --c-success: #10b981;
-    --c-warning: #f59e0b;
-    --c-danger: #ef4444;
+    /* Accent Spectrum - Adjusted for Light Mode Contrast */
+    --c-primary: #2563eb; /* Darker Blue */
+    --c-primary-dim: rgba(37, 99, 235, 0.1);
+    --c-primary-glow: rgba(37, 99, 235, 0.15);
+    --c-accent: #0891b2; /* Darker Cyan */
+    --c-accent-glow: rgba(8, 145, 178, 0.15);
+    --c-purple: #7c3aed; /* Darker Purple */
+    --c-success: #059669;
+    --c-warning: #d97706;
+    --c-danger: #dc2626;
     
-    /* Text Hierarchy */
-    --c-text: #f8fafc;
-    --c-text-2: #cbd5e1;
-    --c-text-muted: #64748b;
-    --c-text-dim: #475569;
+    /* Text Hierarchy - Inverted */
+    --c-text: #0f172a; /* Slate 900 */
+    --c-text-2: #334155; /* Slate 700 */
+    --c-text-muted: #64748b; /* Slate 500 */
+    --c-text-dim: #94a3b8; /* Slate 400 */
     
     /* Typography */
-    --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    --font-primary: 'Code Saver', monospace;
+    --font-mono: 'Code Saver', monospace;
     
     /* Spacing Scale */
     --space-xs: 0.25rem;
@@ -54,10 +54,12 @@
     --duration-slower: 800ms;
     
     /* Elevation */
-    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
-    --shadow-lg: 0 12px 40px rgba(0,0,0,0.5);
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
     --shadow-glow: 0 0 60px -12px var(--c-primary-glow);
+    --c-signal: #0891b2; /* Added explicitly for Light Mode consistency */
 }
 
 /* === RESET & BASE === */
@@ -95,48 +97,52 @@ body {
     z-index: -100;
     pointer-events: none;
     overflow: hidden;
-    background: #020408; /* Deep void base */
+    background: var(--c-void);
 }
 
-/* 1. Deep Space Gradient */
+/* 1. Deep Space Gradient - Inverted to subtle shadows */
 .atmo-gradient {
     position: absolute;
     inset: 0;
     background: 
-        radial-gradient(circle at 20% 10%, rgba(30, 41, 59, 0.15), transparent 40%),
-        radial-gradient(circle at 80% 30%, rgba(59, 130, 246, 0.05), transparent 40%),
-        radial-gradient(circle at 50% 80%, rgba(139, 92, 246, 0.05), transparent 50%);
+        radial-gradient(circle at 20% 10%, rgba(148, 163, 184, 0.1), transparent 40%),
+        radial-gradient(circle at 80% 30%, rgba(37, 99, 235, 0.03), transparent 40%),
+        radial-gradient(circle at 50% 80%, rgba(124, 58, 237, 0.03), transparent 50%);
     opacity: 0.8;
 }
 
-/* 2. Stars Layer (Replaces Noise) */
+/* 2. Stars Layer (Replaces Noise) - Inverted to Dark Specs */
 .atmo-stars {
     position: absolute;
     inset: 0;
-    /* Handled by Canvas or use this as static fallback if desired */
-    /* opacity: 0.5; */
+    background-image: 
+        radial-gradient(circle at center, #0f172a 1px, transparent 1px);
+    background-size: 100px 100px;
+    opacity: 0.15; /* Subtle dark stars */
 }
 
 /* 3. The Canvas Renderer (High-Def Stars/Dust) */
 #neural-field {
     position: absolute;
     inset: 0;
-    opacity: 1; /* Fully visible */
-    /* Mix-blend-mode: screen; Optional, usually normal for stars */
+    opacity: 1;
+    /* Invert canvas output via filter if canvas draws white stars? 
+       Ideally we rebuild canvas, but filter can work for quick inversion */
+    filter: invert(1) hue-rotate(180deg); 
 }
 
-/* 4. Subtle Grid (Perspective or Flat) */
+/* 4. Subtle Grid (Perspective or Flat) - Dark Lines */
 .atmo-grid {
     position: absolute;
     inset: -50%;
     width: 200%;
     height: 200%;
     background-image: 
-        linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+        linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
     background-size: 80px 80px;
     transform: perspective(1000px) rotateX(60deg) translateY(0) translateZ(-200px);
-    opacity: 0.4;
+    opacity: 1;
     mask-image: radial-gradient(circle at center, black 0%, transparent 60%);
     animation: gridDrift 240s linear infinite;
     pointer-events: none;
@@ -200,7 +206,7 @@ body:hover .cursor-glow {
 }
 /* Premium subtle gradient for emphasis */
 .hero-title .gradient-text {
-    background: linear-gradient(135deg, #fff, #94a3b8);
+    background: linear-gradient(135deg, #0f172a, #64748b);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -216,7 +222,7 @@ body:hover .cursor-glow {
     right: 0;
     height: 80px;
     z-index: 1000;
-    background: rgba(2, 4, 8, 0.7);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--c-border);
     transition: all var(--duration-normal) var(--ease-out-quint);
@@ -224,7 +230,7 @@ body:hover .cursor-glow {
 
 .nav-header.scrolled {
     height: 64px;
-    background: rgba(2, 4, 8, 0.9);
+    background: rgba(255, 255, 255, 0.9);
 }
 
 .nav-inner {
@@ -346,7 +352,7 @@ body:hover .cursor-glow {
 
 /* === OVERCLOCK STATE (Hover) === */
 .brand:hover .core-center {
-    background: #fff;
+    background: #0f172a;
     box-shadow: 0 0 25px var(--c-signal), 0 0 50px var(--c-signal);
     transform: scale(1.3);
 }
@@ -355,12 +361,12 @@ body:hover .cursor-glow {
     animation-duration: 2s;
     border-color: var(--c-signal);
     border-bottom-color: transparent;
-    box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+    box-shadow: 0 0 15px rgba(8, 145, 178, 0.3);
 }
 
 .brand:hover .ring-2 {
     animation-duration: 1.5s;
-    border-color: #fff;
+    border-color: #0f172a;
     border-right-color: transparent;
 }
 
@@ -424,7 +430,7 @@ body:hover .cursor-glow {
 
 .nav-item:hover {
     color: var(--c-text);
-    background: rgba(255,255,255,0.03);
+    background: rgba(0,0,0,0.03);
 }
 
 .nav-item.active {
@@ -476,44 +482,6 @@ body:hover .cursor-glow {
     letter-spacing: 0.05em;
 }
 
-.depth-indicator {
-    position: relative;
-    width: 32px;
-    height: 32px;
-}
-
-.depth-ring {
-    width: 100%;
-    height: 100%;
-    transform: rotate(-90deg);
-}
-
-.depth-track {
-    fill: none;
-    stroke: var(--c-border);
-    stroke-width: 2;
-}
-
-.depth-progress {
-    fill: none;
-    stroke: var(--c-primary);
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-dasharray: 100;
-    stroke-dashoffset: 100;
-    transition: stroke-dashoffset 0.5s var(--ease-out-expo);
-}
-
-.depth-value {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--c-primary);
-}
 
 .scroll-indicator {
     position: absolute;
@@ -640,14 +608,14 @@ body:hover .cursor-glow {
 
 .btn-plasma {
     background: var(--c-text);
-    color: var(--c-void);
+    color: #fff;
     border: none;
 }
 
 .btn-plasma:hover {
     transform: translateY(-2px);
-    background: white;
-    box-shadow: 0 0 30px rgba(255,255,255,0.2);
+    background: var(--c-primary);
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
 }
 
 .btn-shine {
@@ -902,14 +870,14 @@ body:hover .cursor-glow {
 
 .competence-card {
     padding: var(--space-lg);
-    background: rgba(255,255,255,0.02);
+    background: rgba(0,0,0,0.02);
     border: 1px solid var(--c-border);
     border-radius: 8px;
     transition: all var(--duration-normal) var(--ease-out-quint);
 }
 
 .competence-card:hover {
-    background: rgba(255,255,255,0.04);
+    background: rgba(0,0,0,0.04);
     border-color: var(--c-border-active);
     transform: translateY(-2px);
 }
@@ -917,7 +885,7 @@ body:hover .cursor-glow {
 .comp-icon {
     width: 40px;
     height: 40px;
-    background: rgba(255,255,255,0.05);
+    background: rgba(0,0,0,0.05);
     border-radius: 8px;
     margin-bottom: var(--space-md);
 }
@@ -1005,17 +973,17 @@ body:hover .cursor-glow {
 
 /* === CONTACT === */
 .terminal-window {
-    background: #050505;
-    border: 1px solid var(--c-border);
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.1);
 }
 
 .contact-main {
-    background: rgba(255,255,255,0.02);
+    background: rgba(255,255,255,0.7);
     border: 1px solid var(--c-border);
 }
 
 .contact-icon {
-    background: rgba(255,255,255,0.05);
+    background: rgba(0,0,0,0.05);
 }
 
 .social-btn {
@@ -1033,7 +1001,7 @@ body:hover .cursor-glow {
 /* === FOOTER === */
 .site-footer {
     border-top: 1px solid var(--c-border);
-    background: #020202;
+    background: #ffffff;
     padding: var(--space-xl) 0;
 }
 
@@ -1105,8 +1073,8 @@ body:hover .cursor-glow {
     border-radius: 4px;
     
     /* Glass Material */
-    background: rgba(10, 15, 25, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.08); /* Initial border */
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Initial border */
     backdrop-filter: blur(20px) saturate(180%);
     
     display: flex;
@@ -1125,14 +1093,14 @@ body:hover .cursor-glow {
 .holo-slate:hover {
     transform: translateY(-10px) translateZ(20px) !important; /* Override scroll rotation */
     border-color: var(--c-signal);
-    box-shadow: 0 20px 50px rgba(0, 240, 255, 0.15), inset 0 0 20px rgba(0, 240, 255, 0.05);
+    box-shadow: 0 20px 50px rgba(8, 145, 178, 0.15), inset 0 0 20px rgba(8, 145, 178, 0.05);
     z-index: 10;
 }
 
 /* Focused State (Center) */
 .holo-slate.active-slate {
-    border-color: rgba(0, 240, 255, 0.3);
-    box-shadow: 0 10px 30px rgba(0, 240, 255, 0.1);
+    border-color: rgba(8, 145, 178, 0.3);
+    box-shadow: 0 10px 30px rgba(8, 145, 178, 0.1);
 }
 
 /* Status Pill (Top Right) */
@@ -1148,7 +1116,7 @@ body:hover .cursor-glow {
     border-radius: 20px;
     text-transform: uppercase;
     letter-spacing: 1px;
-    background: rgba(0, 240, 255, 0.05);
+    background: rgba(8, 145, 178, 0.05);
 }
 
 /* Data Header */
@@ -1167,7 +1135,7 @@ body:hover .cursor-glow {
 
 .slate-title {
     font-size: 1.8rem;
-    color: #fff;
+    color: var(--c-text);
     line-height: 1.1;
     margin-bottom: 16px;
     font-weight: 700;
@@ -1181,7 +1149,7 @@ body:hover .cursor-glow {
 
 /* Metrics Footer */
 .slate-footer {
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
     padding-top: 20px;
     display: flex;
     justify-content: space-between;
@@ -1244,7 +1212,7 @@ body:hover .cursor-glow {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: rgba(10, 15, 25, 0.8);
+    background: rgba(255, 255, 255, 0.8);
     border: 1px solid var(--c-signal);
     color: var(--c-signal);
     display: flex;
@@ -1257,7 +1225,7 @@ body:hover .cursor-glow {
 
 .nav-btn:hover {
     background: var(--c-signal);
-    color: #000;
+    color: #fff;
     box-shadow: 0 0 20px var(--c-signal);
     transform: scale(1.1);
 }
@@ -1267,7 +1235,7 @@ body:hover .cursor-glow {
     width: 80%;
     max-width: 600px;
     height: 2px; /* Sleek line */
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.1);
     margin: 40px auto 0;
     position: relative;
     border-radius: 2px;
@@ -1311,7 +1279,7 @@ body:hover .cursor-glow {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(2, 4, 8, 0.85);
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(10px);
 }
 
@@ -1321,10 +1289,10 @@ body:hover .cursor-glow {
     max-width: 1000px;
     height: auto;
     max-height: 90vh;
-    background: rgba(14, 18, 27, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(0, 0, 0, 0.05);
     transform: scale(0.95) translateY(20px);
     transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     overflow: hidden;
@@ -1360,20 +1328,20 @@ body:hover .cursor-glow {
 
 /* Visual Column */
 .modal-visual {
-    background: linear-gradient(135deg, rgba(6, 9, 16, 1) 0%, rgba(14, 18, 27, 1) 100%);
+    background: linear-gradient(135deg, rgba(241, 245, 249, 1) 0%, rgba(255, 255, 255, 1) 100%);
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
     overflow: hidden;
 }
 
 .blueprint-grid {
     position: absolute;
     inset: 0;
-    background-image: linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),
-                      linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
+    background-image: linear-gradient(rgba(8, 145, 178, 0.05) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(8, 145, 178, 0.05) 1px, transparent 1px);
     background-size: 20px 20px;
     opacity: 0.5;
 }
@@ -1381,7 +1349,7 @@ body:hover .cursor-glow {
 .modal-icon-wrapper {
     font-size: 5rem;
     color: var(--c-signal);
-    filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.3));
+    filter: drop-shadow(0 0 20px rgba(8, 145, 178, 0.3));
     position: relative;
     z-index: 10;
 }
@@ -1410,7 +1378,7 @@ body:hover .cursor-glow {
 
 .modal-title {
     font-size: 2.5rem;
-    color: #fff;
+    color: var(--c-text);
     margin-bottom: 16px;
     font-weight: 700;
     line-height: 1.1;
@@ -1427,10 +1395,10 @@ body:hover .cursor-glow {
     font-family: var(--font-mono);
     font-size: 0.75rem;
     color: var(--c-primary);
-    background: rgba(59, 130, 246, 0.1);
+    background: rgba(37, 99, 235, 0.1);
     padding: 4px 8px;
     border-radius: 4px;
-    border: 1px solid rgba(59, 130, 246, 0.2);
+    border: 1px solid rgba(37, 99, 235, 0.2);
 }
 
 .modal-kpi-row {
@@ -1438,7 +1406,7 @@ body:hover .cursor-glow {
     gap: 30px;
     margin-bottom: 30px;
     padding-bottom: 30px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .modal-kpi-item .kpi-val {
@@ -1475,7 +1443,7 @@ body:hover .cursor-glow {
     position: relative;
     padding: 100px 0;
     margin: 100px 0;
-    background: radial-gradient(circle at 50% 50%, #060910 0%, #020408 100%);
+    background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f1f5f9 100%);
     overflow: hidden;
 }
 
@@ -1499,9 +1467,9 @@ body:hover .cursor-glow {
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 4px;
     overflow: hidden;
-    background: rgba(10, 15, 25, 0.8);
+    background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(30px);
-    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
 }
 
 .console-column {
@@ -1510,7 +1478,7 @@ body:hover .cursor-glow {
 }
 
 .console-column.left {
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .console-header {
@@ -1518,7 +1486,7 @@ body:hover .cursor-glow {
     align-items: center;
     gap: 10px;
     margin-bottom: 25px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     padding-bottom: 15px;
 }
 
@@ -1553,9 +1521,9 @@ body:hover .cursor-glow {
 
 .input-group input, .input-group textarea {
     width: 100%;
-    background: rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: #fff;
+    background: rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.1);
+    color: var(--c-text);
     padding: 12px;
     font-family: var(--font-primary);
     font-size: 0.9rem;
@@ -1594,7 +1562,7 @@ body:hover .cursor-glow {
 
 .cal-title {
     font-family: var(--font-mono);
-    color: #fff;
+    color: var(--c-text);
     font-weight: 700;
 }
 
@@ -1606,7 +1574,7 @@ body:hover .cursor-glow {
     transition: color 0.2s;
 }
 
-.cal-nav:hover { color: #fff; }
+.cal-nav:hover { color: var(--c-text); }
 
 .cal-grid {
     display: grid;
@@ -1624,7 +1592,7 @@ body:hover .cursor-glow {
 
 .cal-day {
     aspect-ratio: 1;
-    background: rgba(255,255,255,0.03);
+    background: rgba(0,0,0,0.03);
     border: 1px solid transparent;
     color: var(--c-text-muted);
     font-size: 0.9rem;
@@ -1636,19 +1604,19 @@ body:hover .cursor-glow {
 }
 
 .cal-day.available {
-    background: rgba(255,255,255,0.08);
-    color: #fff;
+    background: rgba(0,0,0,0.05);
+    color: var(--c-text);
     cursor: pointer;
 }
 
 .cal-day.available:hover {
     border-color: var(--c-signal);
-    background: rgba(0, 240, 255, 0.1);
+    background: rgba(8, 145, 178, 0.1);
 }
 
 .cal-day.selected {
     background: var(--c-signal);
-    color: #000;
+    color: #fff;
     box-shadow: 0 0 15px var(--c-signal);
 }
 
@@ -1666,8 +1634,8 @@ body:hover .cursor-glow {
 }
 
 .dock-item {
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(0,0,0,0.02);
+    border: 1px solid rgba(0,0,0,0.1);
     padding: 15px;
     display: flex;
     align-items: center;
@@ -1678,7 +1646,7 @@ body:hover .cursor-glow {
 
 .dock-item:hover {
     border-color: var(--c-signal);
-    background: rgba(0, 240, 255, 0.05);
+    background: rgba(8, 145, 178, 0.05);
     transform: translateY(-2px);
 }
 
@@ -1698,7 +1666,7 @@ body:hover .cursor-glow {
 .dock-label {
     font-family: var(--font-primary);
     font-weight: 700;
-    color: #fff;
+    color: var(--c-text);
     font-size: 0.9rem;
 }
 
@@ -1715,8 +1683,8 @@ body:hover .cursor-glow {
 
 /* Executive Footer */
 .executive-footer {
-    background: #020408;
-    border-top: 1px solid rgba(255,255,255,0.1);
+    background: #ffffff;
+    border-top: 1px solid rgba(0,0,0,0.1);
     padding: 15px 0;
     font-family: var(--font-mono);
     font-size: 0.75rem;

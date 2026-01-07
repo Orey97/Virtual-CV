@@ -99,7 +99,7 @@ class KineticStream {
         // Add listeners to new slates
         document.querySelectorAll('.holo-slate').forEach(slate => {
             slate.addEventListener('mouseenter', () => {
-                State.addXP(50, 'Project Analysis');
+                // Slate hover interaction
             });
         });
     }
@@ -142,11 +142,6 @@ class KineticStream {
             this.wrapper.style.cursor = "grab";
             this.wrapper.style.willChange = "auto";
             
-            // Gamification: Kinetic Exploration
-            if (Math.abs(velX) > 25) {
-                State.addXP(15, 'Kinetic Exploration');
-            }
-
             this.beginMomentumDecay();
         };
 
@@ -359,9 +354,6 @@ class KineticStream {
 
         // Animate In
         this.modal.classList.add('active');
-        
-        // Add XP
-        State.addXP(25, 'Deep Dive');
     }
 
     closeModal() {
