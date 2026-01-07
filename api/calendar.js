@@ -210,21 +210,16 @@ Status: Awaiting Direct Confirmation
                 dateTime: endDateTime.toISOString(),
                 timeZone: timezone || 'Europe/Rome',
             },
-            // TRIGGER AUTOMATIC NOTIFICATIONS
-            attendees: [
-                { email: email }, // Sends invite to the Recruiter
-                { email: calendarId } // Sends invite to YOU
-            ],
+            // NOTE: attendees and sendUpdates removed - Service Accounts cannot send invites
+            // on personal Google accounts (requires Domain-Wide Delegation for GSuite)
             reminders: {
                 useDefault: false,
                 overrides: [
-                    { method: 'email', minutes: 60 }, // Email 1 hour before
-                    { method: 'popup', minutes: 10 }, // Mobile alert 10 mins before
-                ],
-            },
-            conferenceData: {
-                createRequest: { requestId: `meet_${Date.now()}` } // Auto-generates Meet Link
+                    { method: 'email', minutes: 60 },
+                    { method: 'popup', minutes: 10 }
+                ]
             }
+            // NOTE: conferenceData removed - Service Accounts often can't create Meet links
         };
         
         console.log('[CALENDAR_API] Event object constructed:', JSON.stringify(event, null, 2));
@@ -232,9 +227,8 @@ Status: Awaiting Direct Confirmation
         // EXECUTE INSERTION
         const result = await calendar.events.insert({
             calendarId: calendarId,
-            resource: event,
-            sendUpdates: 'all', // THIS IS THE KEY: Triggers automatic Email Notifications
-            conferenceDataVersion: 1, // Required for Google Meet generation
+            resource: event
+            // sendUpdates removed - causes 403 on personal accounts
         });
         
         console.log('[CALENDAR_API] Event created successfully:', result.data.id);
