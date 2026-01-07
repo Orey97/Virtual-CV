@@ -171,8 +171,8 @@ async function handlePost(req, res) {
         // Calculate end time (60 minutes later)
         const endDateTime = new Date(startDateTime.getTime() + (60 * 60 * 1000));
         
-        // Determine timezone (fallback to UTC)
-        const eventTimezone = timezone || 'UTC';
+        // Determine timezone (fallback to Europe/Rome)
+        const eventTimezone = timezone || 'Europe/Rome';
         
         console.log('[CALENDAR_API] Temporal Mapping:', {
             inputDate: date,
@@ -185,28 +185,45 @@ async function handlePost(req, res) {
         
         // CONSTRUCT EVENT OBJECT
         const event = {
-            summary: `STRATEGIC ALIGNMENT: ${name}`,
-            description: [
-                `OBJECTIVE: ${briefing || 'General Discussion'}`,
-                `CONTACT: ${email}`,
-                `---`,
-                `[UPLINK: PORTFOLIO_V5.0]`,
-                `[SYNCED: ${new Date().toISOString()}]`
-            ].join('\n'),
+            summary: `💼 INTERVIEW / ALIGNMENT: ${name}`, 
+            location: "Google Meet (Link will be generated)", 
+            description: `
+🚀 **NEW OPPORTUNITY DETECTED VIA RENALDO.AI**
+--------------------------------------------------
+👤 **CANDIDATE NAME:** ${name}
+📧 **CONTACT EMAIL:** ${email}
+📅 **SCHEDULED ON:** ${date} at ${startTime}
+--------------------------------------------------
+📝 **OBJECTIVE / BRIEFING:**
+"${briefing || 'No briefing provided.'}"
+--------------------------------------------------
+🔧 [SYSTEM_METADATA]
+Source: Portfolio Deployment V6.0
+Integrity: Verified Uplink
+Status: Awaiting Direct Confirmation
+            `,
             start: {
                 dateTime: startDateTime.toISOString(),
-                timeZone: eventTimezone
+                timeZone: timezone || 'Europe/Rome',
             },
             end: {
                 dateTime: endDateTime.toISOString(),
-                timeZone: eventTimezone
+                timeZone: timezone || 'Europe/Rome',
             },
+            // TRIGGER AUTOMATIC NOTIFICATIONS
+            attendees: [
+                { email: email }, // Sends invite to the Recruiter
+                { email: calendarId } // Sends invite to YOU
+            ],
             reminders: {
                 useDefault: false,
                 overrides: [
-                    { method: 'email', minutes: 60 },
-                    { method: 'popup', minutes: 10 }
-                ]
+                    { method: 'email', minutes: 60 }, // Email 1 hour before
+                    { method: 'popup', minutes: 10 }, // Mobile alert 10 mins before
+                ],
+            },
+            conferenceData: {
+                createRequest: { requestId: `meet_${Date.now()}` } // Auto-generates Meet Link
             }
         };
         
@@ -216,7 +233,8 @@ async function handlePost(req, res) {
         const result = await calendar.events.insert({
             calendarId: calendarId,
             resource: event,
-            // sendUpdates: 'all' <-- REMOVED to prevent "Forbidden" error on personal accounts
+            sendUpdates: 'all', // THIS IS THE KEY: Triggers automatic Email Notifications
+            conferenceDataVersion: 1, // Required for Google Meet generation
         });
         
         console.log('[CALENDAR_API] Event created successfully:', result.data.id);
