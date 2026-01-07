@@ -256,9 +256,9 @@ class ContactInterface {
         if (!this.container) return;
         
         // Update Console Title
-        const consoleTitle = document.querySelector('.console-title');
+        const consoleTitle = document.querySelector('.console-column.right .console-title');
         if (consoleTitle) {
-            consoleTitle.innerHTML = 'AVAILABILITY_SYNC [LIVE_UPLINK]';
+            consoleTitle.innerHTML = 'My Availability';
         }
 
         await this.service.initialize();
@@ -293,11 +293,11 @@ class ContactInterface {
                 <div class="cal-footer-status">
                      <div class="status-item">
                         <span class="status-dot green"></span>
-                        <span>ACTIVE</span>
+                        <span>Live</span>
                      </div>
                      <div class="status-item">
                         <span class="status-dot green"></span>
-                        <span>SYNC: GOOGLE_API</span>
+                        <span>Synced with Calendar</span>
                      </div>
                 </div>
             </div>
@@ -363,7 +363,7 @@ class ContactInterface {
             </div>
             <div class="cal-loading" style="height:200px">
                 <i class="fa-solid fa-circle-notch fa-spin"></i>
-                <span style="font-size:0.7rem; margin-top:10px">RETRIEVING TIME SLOTS...</span>
+                <span style="font-size:0.7rem; margin-top:10px">Loading time slots...</span>
             </div>
         `;
 
@@ -377,7 +377,7 @@ class ContactInterface {
         // Render Slots
         let slotsHtml = `<div class="slots-grid">`;
         if (slots.length === 0) {
-            slotsHtml += `<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--c-text-muted)">NO AVAILABILITY</div>`;
+            slotsHtml += `<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--c-text-muted)">No available slots</div>`;
         } else {
             slots.forEach(slot => {
                 const action = slot.status === 'AVAILABLE' ? `onclick="window.contactInterface.selectSlot('${slot.time}', this)"` : '';
@@ -422,20 +422,20 @@ class ContactInterface {
         
         if (this.selectedDate && this.selectedSlot) {
             this.slotDisplay.innerHTML = `
-                <span class="slot-label">TARGET_SLOT:</span>
+                <span class="slot-label">Selected Time:</span>
                 <span class="slot-value active">${this.selectedDate} @ ${this.selectedSlot}</span>
             `;
             this.slotDisplay.style.borderColor = 'var(--c-success)';
         } else if (this.selectedDate) {
             this.slotDisplay.innerHTML = `
-                <span class="slot-label">TARGET_SLOT:</span>
-                <span class="slot-value" style="color:var(--c-warning)">SELECT_TIME...</span>
+                <span class="slot-label">Selected Time:</span>
+                <span class="slot-value" style="color:var(--c-warning)">Pick a time...</span>
             `;
             this.slotDisplay.style.borderColor = 'var(--c-warning)';
         } else {
              this.slotDisplay.innerHTML = `
-                <span class="slot-label">TARGET_SLOT:</span>
-                <span class="slot-value">PENDING_SELECTION</span>
+                <span class="slot-label">Selected Time:</span>
+                <span class="slot-value">Choose a slot</span>
             `;
             this.slotDisplay.style.borderColor = '';
         }
@@ -449,15 +449,15 @@ class ContactInterface {
             
             // VALIDATION: Ensure date & time are selected
             if (!this.selectedDate || !this.selectedSlot) {
-                alert('SYSTEM ERROR: Complete booking coordinates (Date & Time) required.');
+                alert('Please select both a date and time slot to schedule your meeting.');
                 return;
             }
 
             const btn = this.form.querySelector('.scheduler-submit');
             const originalText = btn.innerHTML;
             
-            // STATE: TRANSMITTING
-            btn.innerHTML = `<span class="btn-text"><i class="fa-solid fa-circle-notch fa-spin"></i> TRANSMITTING...</span>`;
+            // STATE: SUBMITTING
+            btn.innerHTML = `<span class="btn-text"><i class="fa-solid fa-circle-notch fa-spin"></i> Scheduling...</span>`;
             btn.disabled = true;
             btn.style.opacity = '0.7';
             
@@ -479,19 +479,17 @@ class ContactInterface {
             // HANDLE RESPONSE STATES
             if (result.status === 'CONFIRMED') {
                 // SUCCESS: Event was created on Google Calendar
-                btn.innerHTML = `<span class="btn-text" style="color:var(--c-success)"><i class="fa-solid fa-check-circle"></i> ALIGNMENT CONFIRMED</span>`;
+                btn.innerHTML = `<span class="btn-text" style="color:var(--c-success)"><i class="fa-solid fa-check-circle"></i> Meeting Scheduled!</span>`;
                 btn.style.borderColor = 'var(--c-success)';
                 
                 alert(
-                    `[SYSTEM NOTIFICATION]\n\n` +
-                    `✓ ALIGNMENT CONFIRMED\n` +
+                    `Meeting Confirmed!\n\n` +
+                    `✓ Your meeting has been scheduled\n` +
                     `================================\n` +
-                    `DATE:       ${this.selectedDate}\n` +
-                    `TIME:       ${this.selectedSlot}\n` +
-                    `STATUS:     SYNCED_TO_GOOGLE_CALENDAR\n` +
-                    `EVENT ID:   ${result.id}\n` +
+                    `Date: ${this.selectedDate}\n` +
+                    `Time: ${this.selectedSlot}\n` +
                     `\n` +
-                    `Calendar invitation sent to your email.`
+                    `A calendar invitation has been sent to your email.`
                 );
                 
                 // Reset after success
@@ -508,19 +506,17 @@ class ContactInterface {
                 
             } else if (result.status === 'OFFLINE_MODE' || result.isFallback) {
                 // OFFLINE: Service Account not configured
-                btn.innerHTML = `<span class="btn-text" style="color:var(--c-warning)"><i class="fa-solid fa-exclamation-triangle"></i> OFFLINE MODE</span>`;
+                btn.innerHTML = `<span class="btn-text" style="color:var(--c-warning)"><i class="fa-solid fa-exclamation-triangle"></i> Demo Mode</span>`;
                 btn.style.borderColor = 'var(--c-warning)';
                 
                 console.warn('[UI] Operating in OFFLINE mode - Backend credentials not configured');
                 
                 alert(
-                    `[SYSTEM NOTIFICATION]\n\n` +
-                    `⚠ OFFLINE MODE ACTIVE\n` +
-                    `================================\n` +
-                    `The booking system is currently operating in demo mode.\n` +
-                    `Your request was NOT synced to Google Calendar.\n` +
+                    `Demo Mode\n\n` +
+                    `⚠ The booking system is currently in demo mode.\n` +
+                    `Your request was not synced to the calendar.\n` +
                     `\n` +
-                    `Please contact the administrator.`
+                    `Please contact me directly via email.`
                 );
                 
                 setTimeout(() => {
@@ -532,19 +528,17 @@ class ContactInterface {
                 
             } else {
                 // FAILURE: Backend error
-                btn.innerHTML = `<span class="btn-text" style="color:var(--c-danger)"><i class="fa-solid fa-times-circle"></i> UPLINK FAILED</span>`;
+                btn.innerHTML = `<span class="btn-text" style="color:var(--c-danger)"><i class="fa-solid fa-times-circle"></i> Booking Failed</span>`;
                 btn.style.borderColor = 'var(--c-danger)';
                 
                 console.error('[UI] Booking failed:', result.error);
                 
                 alert(
-                    `[SYSTEM ERROR]\n\n` +
-                    `✗ TRANSMISSION FAILED\n` +
-                    `================================\n` +
-                    `Status: ${result.status}\n` +
+                    `Booking Error\n\n` +
+                    `Unable to schedule your meeting.\n` +
                     `Error: ${result.error || 'Unknown error'}\n` +
                     `\n` +
-                    `Please check the browser console for details.`
+                    `Please try again or contact me directly.`
                 );
                 
                 setTimeout(() => {

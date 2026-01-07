@@ -19,6 +19,7 @@
     min-height: 700px;
     perspective: 1000px;
     overflow: visible;
+    background: transparent;
 }
 
 .holo-stage {
@@ -49,13 +50,15 @@
 
 /* === SECTOR COLUMN === */
 .sector-column {
-    background: rgba(241, 245, 249, 0.6); /* Slate-100 transparent */
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
     padding: 0;
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     display: flex;
     flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
 }
 
 /* === HEADERS === */
@@ -84,19 +87,16 @@
 /* === V11 ULTRA-GRADE NODES === */
 .neural-node {
     position: relative;
-    background: linear-gradient(165deg, #ffffff 0%, #f1f5f9 100%);
+    background: rgba(255, 255, 255, 0.7);
     border: 1px solid rgba(0, 0, 0, 0.08);
-    /* Tech chamfer/radius mix */
-    border-radius: 2px 12px 2px 12px;
+    border-radius: 8px;
     padding: 18px;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-    /* backdrop-filter removed for performance (opaque bg) */
-    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    margin-bottom: 12px;
     overflow: hidden;
-    margin-bottom: 20px;
-    overflow: hidden;
-    /* box-shadow removed for perf */
 }
 
 /* Holographic Shine Gradient */
@@ -130,7 +130,7 @@
     transform: translateY(-4px) scale(1.02);
     border-color: var(--c-signal);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    background: linear-gradient(165deg, #ffffff 0%, #e2e8f0 100%);
+    background: rgba(255, 255, 255, 0.9);
 }
 
 .neural-node:hover::before {
