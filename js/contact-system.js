@@ -11,11 +11,6 @@
  * Defines specific operational hours and slot duration for precise scheduling.
  */
 const SYSTEM_CONFIG = {
-    auth: {
-        clientId: '732652071804-mlo3vo636rhuvae8pig3q49e1bdnrkn6.apps.googleusercontent.com',
-        scope: 'https://www.googleapis.com/auth/calendar.events',
-        mode: 'LIVE' 
-    },
     calendar: {
         businessStart: 10, // 10:00 AM
         businessEnd: 18,   // 06:00 PM
@@ -35,115 +30,6 @@ class ICalendarAdapter {
     async getAvailability(year, month) { throw new Error('Method not implemented'); }
     async getSlots(dateStr) { throw new Error('Method not implemented'); }
     async createBooking(payload) { throw new Error('Method not implemented'); }
-}
-
-/**
- * MockCalendarAdapter V2.1
- * Implements deterministic time-slot availability logic.
- * Ensures "Monday blocks Monday" bug is DEAD by using full date hashes.
- */
-class MockCalendarAdapter extends ICalendarAdapter {
-    constructor() {
-        super();
-        this.latencyBase = 600; 
-    }
-
-    async initialize() {
-        console.log('[System] Initializing Adapter: MockCalendarAdapter V2.1');
-        return true;
-    }
-
-    // Helper: Deterministic Hash from Date String
-    _getDateHash(dateStr) {
-        let hash = 0;
-        for (let i = 0; i < dateStr.length; i++) {
-            const char = dateStr.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash = hash & hash; // Convert to 32bit integer
-        }
-        return Math.abs(hash);
-    }
-
-    async getAvailability(year, month) {
-        await new Promise(resolve => setTimeout(resolve, this.latencyBase));
-
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const availability = [];
-
-        for (let d = 1; d <= daysInMonth; d++) {
-            const date = new Date(year, month, d);
-            const dayOfWeek = date.getDay();
-            const dateStr = `${year}-${String(month + 1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-            
-            let status = 'AVAILABLE';
-            
-            // 1. Structural constraints (Weekends)
-            if (SYSTEM_CONFIG.calendar.daysOff.includes(dayOfWeek)) {
-                status = 'UNAVAILABLE'; // Gray out
-            } else {
-                // 2. Logic: Deterministic "Busy" Days
-                // If hash % 7 == 0, the WHOLE DAY is busy/booked
-                const hash = this._getDateHash(dateStr);
-                if (hash % 7 === 0) {
-                    status = 'FULLY_BOOKED'; 
-                }
-            }
-
-            availability.push({
-                date: d,
-                fullDate: dateStr,
-                status: status
-            });
-        }
-        return availability;
-    }
-
-    async getSlots(dateStr) {
-        // Simulate fetch
-        await new Promise(resolve => setTimeout(resolve, 400));
-        
-        const slots = [];
-        const { businessStart, businessEnd } = SYSTEM_CONFIG.calendar;
-        const dateHash = this._getDateHash(dateStr);
-
-        for (let hour = businessStart; hour < businessEnd; hour++) {
-            const timeStr = `${hour}:00`;
-            // Deterministic Slot Availability
-            // Combining date hash and hour ensures unique pattern per day
-            // e.g. 10:00 might be free on Monday 1st but busy Monday 8th
-            const slotEntropy = (dateHash + hour) % 10;
-            
-            // 30% chance of being busy if day is generaly available
-            const isBusy = slotEntropy < 3; 
-
-            slots.push({
-                time: timeStr,
-                status: isBusy ? 'BUSY' : 'AVAILABLE'
-            });
-        }
-        
-        return slots;
-    }
-
-    async createBooking(payload) {
-        await new Promise(resolve => setTimeout(resolve, 1500));
-
-        if (!payload.time.start || !payload.time.slot) {
-            return { error: 'INVALID_TIME_SLOT', status: 400 };
-        }
-
-        console.group('%c[SYSTEM AUDIT] OUTBOUND BOOKING REQUEST', 'color: #00f0ff; background: #000; padding: 4px;');
-        console.log('Target: [MOCK] /api/v1/calendar/events');
-        console.log('Payload:', payload);
-        console.log('Strategy: TIME_SLOT_RESERVATION');
-        console.groupEnd();
-
-        return {
-            id: `evt_${Date.now()}`,
-            status: 'CONFIRMED',
-            timestamp: new Date().toISOString()
-        };
-    }
 }
 
 /**
@@ -338,12 +224,8 @@ class GoogleLiveAdapter extends ICalendarAdapter {
 
 class CalendarService {
     constructor() {
-        // Factory Logic: Decide adapter based on Config
-        if (SYSTEM_CONFIG.auth.mode === 'LIVE') {
-            this.adapter = new GoogleLiveAdapter();
-        } else {
-            this.adapter = new MockCalendarAdapter();
-        }
+        // Direct connection to Google Calendar via Service Account
+        this.adapter = new GoogleLiveAdapter();
     }
     async initialize() { return this.adapter.initialize(); }
     async getAvailability(y, m) { return this.adapter.getAvailability(y, m); }
@@ -373,12 +255,10 @@ class ContactInterface {
     async init() {
         if (!this.container) return;
         
-        // Update Console Title dynamically
+        // Update Console Title
         const consoleTitle = document.querySelector('.console-title');
         if (consoleTitle) {
-            consoleTitle.innerHTML = SYSTEM_CONFIG.auth.mode === 'LIVE' 
-                ? 'AVAILABILITY_SYNC [LIVE_UPLINK]' 
-                : 'AVAILABILITY_SYNC [OFFLINE]';
+            consoleTitle.innerHTML = 'AVAILABILITY_SYNC [LIVE_UPLINK]';
         }
 
         await this.service.initialize();
@@ -413,11 +293,11 @@ class ContactInterface {
                 <div class="cal-footer-status">
                      <div class="status-item">
                         <span class="status-dot green"></span>
-                        <span>${SYSTEM_CONFIG.auth.mode === 'LIVE' ? 'ACTIVE' : 'READY'}</span>
+                        <span>ACTIVE</span>
                      </div>
                      <div class="status-item">
-                        <span class="status-dot ${SYSTEM_CONFIG.auth.mode === 'LIVE' ? 'green' : 'gray'}"></span>
-                        <span>SYNC: ${SYSTEM_CONFIG.auth.mode === 'LIVE' ? 'GOOGLE_API' : 'OFFLINE'}</span>
+                        <span class="status-dot green"></span>
+                        <span>SYNC: GOOGLE_API</span>
                      </div>
                 </div>
             </div>
