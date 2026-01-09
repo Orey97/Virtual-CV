@@ -986,6 +986,95 @@ class NeuralArchitect {
 // ExecutiveScheduler replaced by ContactInterface in contact-system.js
 
 // ============================================
+// ROME TIME CLOCK & DATE TICKER
+// ============================================
+class RomeClock {
+    constructor() {
+        this.clockEl = document.getElementById('sys-clock');
+        this.tickerEl = document.getElementById('date-ticker');
+        
+        if (!this.clockEl || !this.tickerEl) return;
+        
+        this.timezone = 'Europe/Rome';
+        this.tickerIndex = 0;
+        this.tickerItems = [];
+        
+        this.init();
+    }
+    
+    init() {
+        // Start the clock immediately
+        this.updateClock();
+        
+        // Update clock every second
+        setInterval(() => this.updateClock(), 1000);
+        
+        // Update ticker every 3 seconds
+        this.updateTicker();
+        setInterval(() => this.cycleTicker(), 3000);
+    }
+    
+    getRomeDate() {
+        return new Date(new Date().toLocaleString("en-US", { timeZone: this.timezone }));
+    }
+    
+    updateClock() {
+        const now = this.getRomeDate();
+        
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        
+        this.clockEl.textContent = `${hours}:${minutes}:${seconds}`;
+    }
+    
+    updateTicker() {
+        const now = this.getRomeDate();
+        
+        const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+        const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+        
+        const dayName = days[now.getDay()];
+        const date = String(now.getDate()).padStart(2, '0');
+        const month = months[now.getMonth()];
+        const year = now.getFullYear();
+        
+        // Create dynamic ticker items
+        this.tickerItems = [
+            `${dayName}`,
+            `${date} ${month} ${year}`,
+            `ROME TIME`,
+            `WEEK ${this.getWeekNumber(now)}`
+        ];
+        
+        this.renderTicker();
+    }
+    
+    getWeekNumber(date) {
+        const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+        const dayNum = d.getUTCDay() || 7;
+        d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+        const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+        return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+    }
+    
+    renderTicker() {
+        const currentText = this.tickerItems[this.tickerIndex];
+        this.tickerEl.textContent = currentText;
+        
+        // Add animation class
+        this.tickerEl.classList.remove('ticker-fade');
+        void this.tickerEl.offsetWidth; // Trigger reflow
+        this.tickerEl.classList.add('ticker-fade');
+    }
+    
+    cycleTicker() {
+        this.tickerIndex = (this.tickerIndex + 1) % this.tickerItems.length;
+        this.updateTicker();
+    }
+}
+
+// ============================================
 // INITIALIZATION
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -1005,6 +1094,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize Neural Architect V6
     new NeuralArchitect();
     new KineticStream(); // V2.0 Deployment Stream
+    new RomeClock(); // Rome timezone clock & date ticker
     // ExecutiveScheduler initialization moved to contact-system.js
 
     

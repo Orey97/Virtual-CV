@@ -1738,8 +1738,45 @@ body:hover .cursor-glow {
     align-items: center;
 }
 
-.footer-col.left { display: flex; gap: 15px; }
+.footer-col.left { display: flex; gap: 15px; align-items: center; }
 .sys-separator { color: var(--c-text-muted); opacity: 0.3; }
+
+/* Rome Clock & Date Ticker */
+.sys-clock {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.5px;
+    color: var(--c-signal);
+    font-weight: 600;
+}
+
+.sys-date-scroll {
+    position: relative;
+    overflow: hidden;
+    min-width: 120px;
+}
+
+.date-ticker {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(10px);
+    letter-spacing: 1px;
+    color: var(--c-text-muted);
+}
+
+.date-ticker.ticker-fade {
+    animation: tickerFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes tickerFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
 @media (max-width: 768px) {
     .scheduler-console { grid-template-columns: 1fr; }
