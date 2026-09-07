@@ -1,0 +1,120 @@
+{
+  "$schema": "https://antigravity.dev/schemas/workspace-config-v2.json",
+  "version": "2.0.0",
+  "project": {
+    "name": "virtual-cv-portfolio",
+    "description": "Executive Virtual CV Portfolio for Principal Data Scientist & ML Architect",
+    "stack": {
+      "frontend": "Vanilla JS (ES6+), Vanilla CSS (Custom Properties), HTML5 Semantic",
+      "graphics": "HTML5 Canvas 2D (Loss Manifold Vector Flow)",
+      "backend": "Vercel Serverless Functions (Node.js 24.x)",
+      "integrations": "Google Calendar API (Service Account JWT Auth)",
+      "tooling": "Zero-dependency local HTTP preview (serve.js) & static distribution builder (build.js)"
+    }
+  },
+  "runtime": {
+    "default_agent": "architect",
+    "agents_directory": "./agents",
+    "skills_directory": "../.agents/skills"
+  },
+  "skills_registry": {
+    "brainstorming": {
+      "path": ".agents/skills/brainstorming/SKILL.md",
+      "source": "obra/superpowers",
+      "scope": "Architecture & Requirement Discovery",
+      "purpose": "Explores user intent, enforces hard approval gates before code modifications, classifies tasks (Spike, Bounded, Architectural), and prevents unexamined assumptions."
+    },
+    "hallmark": {
+      "path": ".agents/skills/hallmark/SKILL.md",
+      "source": "nutlope/hallmark",
+      "scope": "Visual Design & Anti-AI-Slop Authority",
+      "purpose": "Enforces structural variety, locked CSS custom properties, roman upright display typography, honest engineering copy, and strict multi-breakpoint mobile responsiveness (320px-1200px)."
+    },
+    "react-spring-physics": {
+      "path": ".agents/skills/react-spring-physics/SKILL.md",
+      "source": "freshtechbro/claudedesignskills",
+      "scope": "Physics Motion & Interaction Dynamics",
+      "purpose": "Supplies natural spring mechanics (mass, tension, friction), interruptible gestures, momentum damping, and velocity-aware micro-interactions translated to performant vanilla CSS/JS."
+    },
+    "ui-ux-pro-max": {
+      "path": ".agents/skills/ui-ux-pro-max/SKILL.md",
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "scope": "Comprehensive UI/UX Intelligence",
+      "purpose": "Provides searchable local guidance across 119 UX rules, 192 product color palettes, 74 font pairings, touch target ergonomics (≥44px), WCAG AA contrast (≥4.5:1), and accessible form states."
+    }
+  },
+  "agents": {
+    "architect": {
+      "config_file": "./agents/architect.json",
+      "role": "Principal ML & Systems Architect",
+      "primary_skills": ["brainstorming", "ui-ux-pro-max"],
+      "triggers": ["architecture", "refactor", "spec", "audit", "plan", "review", "dependencies", "build-system"],
+      "target_components": ["build.js", "package.json", "index.html", "project structure", "design documents"]
+    },
+    "ui_designer": {
+      "config_file": "./agents/ui_designer.json",
+      "role": "Lead UI/UX Designer & Design Systems Engineer",
+      "primary_skills": ["hallmark", "ui-ux-pro-max"],
+      "triggers": ["design", "css", "layout", "style", "typography", "colors", "tokens", "responsive", "mobile"],
+      "target_components": ["css/style.css", "index.html layout structures", "design tokens", "bento grids"]
+    },
+    "motion_engineer": {
+      "config_file": "./agents/motion_engineer.json",
+      "role": "Creative Motion & Physics Interaction Engineer",
+      "primary_skills": ["react-spring-physics", "ui-ux-pro-max"],
+      "triggers": ["animation", "motion", "canvas", "physics", "spring", "transitions", "hover-effects", "cursor"],
+      "target_components": ["js/main.js (SystemLattice, CursorGlow)", "css/style.css (transitions, keyframes)", "interactive cards"]
+    },
+    "fullstack_systems": {
+      "config_file": "./agents/fullstack_systems.json",
+      "role": "Senior Full-Stack & Cloud Integrations Engineer",
+      "primary_skills": ["brainstorming", "ui-ux-pro-max"],
+      "triggers": ["api", "calendar", "backend", "booking", "serverless", "contact", "deploy", "vercel"],
+      "target_components": ["api/calendar.js", "js/contact-system.js", "vercel.json", "serve.js"]
+    }
+  },
+  "orchestration_pipeline": [
+    {
+      "step": 1,
+      "phase": "Discovery & Spec",
+      "agent": "architect",
+      "skill": "brainstorming",
+      "deliverable": "Classified requirement path (Spike/Bounded/Architectural), technical design, and approval gate."
+    },
+    {
+      "step": 2,
+      "phase": "Aesthetic & Structural Design",
+      "agent": "ui_designer",
+      "skill": "hallmark + ui-ux-pro-max",
+      "deliverable": "Design tokens, anti-slop visual hierarchy, responsive layout verification (320px-1200px)."
+    },
+    {
+      "step": 3,
+      "phase": "Motion & Tactile Dynamics",
+      "agent": "motion_engineer",
+      "skill": "react-spring-physics + ui-ux-pro-max",
+      "deliverable": "60fps hardware-accelerated transforms, spring curves, canvas vector loop optimizations."
+    },
+    {
+      "step": 4,
+      "phase": "Full-Stack Implementation",
+      "agent": "fullstack_systems",
+      "skill": "brainstorming + ui-ux-pro-max",
+      "deliverable": "Serverless routes, Google Calendar integration, error boundaries, and form feedback UX."
+    },
+    {
+      "step": 5,
+      "phase": "Quality Gate & Release Verification",
+      "agent": "architect",
+      "skill": "ui-ux-pro-max",
+      "deliverable": "Production build execution (npm run build), bundle verification, zero dead code check."
+    }
+  ],
+  "quality_gates": {
+    "zero_dead_code": "No orphaned CSS selectors, unused CDN libraries, or ghost DOM elements allowed.",
+    "token_discipline": "All colors, fonts, and spaces must consume CSS custom properties defined in :root.",
+    "performance": "GPU-accelerated animations (transform/opacity only); canvas paused when tab is hidden.",
+    "accessibility": "WCAG AA color contrast (≥ 4.5:1), touch targets ≥ 44x44px, keyboard navigation supported.",
+    "build_cleanliness": "Static build into dist/ must execute cleanly and generate 100% reproducible artifacts."
+  }
+}
