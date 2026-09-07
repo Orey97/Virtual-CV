@@ -61,13 +61,18 @@ class GoogleLiveAdapter extends ICalendarAdapter {
             const response = await fetch('/api/calendar');
             if (!response.ok) throw new Error('Sync Failed');
             
-            const data = await response.json();
+            let data = {};
+            try {
+                data = await response.json();
+            } catch (jsonErr) {
+                data = {};
+            }
             this.busyCache = data.busySlots || [];
             this.lastFetch = Date.now();
             return this.busyCache;
         } catch (error) {
             console.error('[System] Calendar Sync Error:', error);
-            return []; // Fail gracefully (show all open) or handle error UI
+            return []; // Fail gracefully (show all open)
         }
     }
 
@@ -178,7 +183,12 @@ class GoogleLiveAdapter extends ICalendarAdapter {
                 body: JSON.stringify(requestBody)
             });
 
-            const data = await response.json();
+            let data = {};
+            try {
+                data = await response.json();
+            } catch (jsonErr) {
+                console.warn('[UPLINK] Non-JSON or empty response received:', response.status);
+            }
             
             console.group('%c[UPLINK] RESPONSE RECEIVED', response.ok ? 'color: #00ff88;' : 'color: #ff4444;');
             console.log('Status:', response.status);
@@ -186,9 +196,9 @@ class GoogleLiveAdapter extends ICalendarAdapter {
             console.groupEnd();
             
             if (!response.ok) {
-                // Specific Handling for different error codes
-                if (response.status === 503) {
-                    console.warn('[UPLINK] Backend 503: Service Account Missing');
+                // Specific Handling for local dev server / missing serverless endpoint (404, 502, 503)
+                if (response.status === 404 || response.status === 502 || response.status === 503) {
+                    console.warn(`[UPLINK] Backend ${response.status}: Service Account / API endpoint not active`);
                     return { status: 'OFFLINE_MODE', error: 'Service credentials not active', isFallback: true };
                 }
                 if (response.status === 403) {
@@ -199,7 +209,15 @@ class GoogleLiveAdapter extends ICalendarAdapter {
                     console.error('[UPLINK] 400 BAD REQUEST:', data.error);
                     return { status: 'VALIDATION_ERROR', error: data.error || 'Invalid request data' };
                 }
-                throw new Error(data.error || 'Uplink Error');
+                return { status: 'OFFLINE_MODE', error: data.error || `HTTP ${response.status} Error`, isFallback: true };
+            }
+
+            // If response is 200 OK but data.eventId is missing (e.g. static dev server returning empty 200)
+            if (!data || !data.eventId) {
+                if (data && data.status === 'OFFLINE') {
+                    return { status: 'OFFLINE_MODE', error: data.error || 'Service credentials not active', isFallback: true };
+                }
+                return { status: 'OFFLINE_MODE', error: 'Local server environment (Demo Mode)', isFallback: true };
             }
 
             // SUCCESS: Event was created
@@ -217,7 +235,8 @@ class GoogleLiveAdapter extends ICalendarAdapter {
         } catch (error) {
             console.error('%c[UPLINK] CRITICAL FAILURE', 'color: #ff4444; font-weight: bold;');
             console.error('Error:', error.message);
-            return { status: 'FAILED', error: error.message };
+            // Catch JSON parse or network errors gracefully as Fallback / Offline Mode
+            return { status: 'OFFLINE_MODE', error: 'Backend serverless function not active in local environment', isFallback: true };
         }
     }
 }
@@ -293,11 +312,11 @@ class ContactInterface {
                 <div class="cal-footer-status">
                      <div class="status-item">
                         <span class="status-dot green"></span>
-                        <span>Live</span>
+                        <span>Active Uplink</span>
                      </div>
                      <div class="status-item">
                         <span class="status-dot green"></span>
-                        <span>Synced with Calendar</span>
+                        <span>Google Calendar Synced</span>
                      </div>
                 </div>
             </div>

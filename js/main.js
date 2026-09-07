@@ -39,16 +39,6 @@ const State = {
 const UI = {
     init() {
         this.scrollIndicator = document.getElementById('scroll-indicator');
-        this.toast = document.getElementById('achievement-toast');
-    },
-    
-    showToast(title, desc) {
-        if (!this.toast) return;
-        document.getElementById('toast-title').textContent = title;
-        document.getElementById('toast-desc').textContent = desc;
-        
-        this.toast.classList.add('show');
-        setTimeout(() => this.toast.classList.remove('show'), 3000);
     }
 };
 
@@ -57,25 +47,42 @@ const UI = {
 // A depth-encoded signal environment.
 // Represents continuous intelligence and stable reference points.
 // ============================================
+// ============================================
+// SYSTEM LATTICE (3D Topographic Manifold & Vector Field Engine)
+// Designed for Senior Machine Learning Engineer Portfolio.
+// Features a 3D Topographic Elevation Surface (Loss Function Manifold),
+// Vector Field Flow Streams, Soft Gravitational Cursor Deformation,
+// and Depth Fog Dissolve in a Clean Light Blue Environment.
+// ============================================
 class SystemLattice {
     constructor() {
         this.canvas = document.getElementById('neural-field');
         if (!this.canvas) return;
         
         this.ctx = this.canvas.getContext('2d', { alpha: true });
-        this.nodes = [];
+        this.gridPoints = [];
+        this.particles = [];
         this.width = 0;
         this.height = 0;
         this.scrollY = 0;
         this.mouseX = 0;
         this.mouseY = 0;
+        this.targetMouseX = 0;
+        this.targetMouseY = 0;
+        
+        // 3D Perspective Camera Setup
+        this.camRotX = 0.35; // Tilt camera for topographic elevation perspective
+        this.camRotY = 0;
+        this.targetCamRotX = 0.35;
+        this.targetCamRotY = 0;
         
         this.init();
     }
     
     init() {
         this.resize();
-        this.createNodes();
+        this.createTopographicGrid();
+        this.createVectorParticles();
         
         window.addEventListener('resize', () => this.resize());
         let tickingScroll = false;
@@ -89,16 +96,11 @@ class SystemLattice {
              }
         });
 
-        let tickingMouse = false;
         window.addEventListener('mousemove', (e) => {
-             if (!tickingMouse) {
-                 window.requestAnimationFrame(() => {
-                     this.mouseX = e.clientX;
-                     this.mouseY = e.clientY;
-                     tickingMouse = false;
-                 });
-                 tickingMouse = true;
-             }
+             this.targetMouseX = e.clientX;
+             this.targetMouseY = e.clientY;
+             this.targetCamRotY = ((e.clientX - this.width / 2) / (this.width / 2)) * 0.16;
+             this.targetCamRotX = 0.35 - ((e.clientY - this.height / 2) / (this.height / 2)) * 0.12;
         });
 
         this.animate();
@@ -109,78 +111,194 @@ class SystemLattice {
         this.height = window.innerHeight;
         this.canvas.width = this.width;
         this.canvas.height = this.height;
-        // Re-initialize signal field
-        this.createNodes();
+        this.targetMouseX = this.width / 2;
+        this.targetMouseY = this.height / 2;
+        this.mouseX = this.width / 2;
+        this.mouseY = this.height / 2;
+        this.createTopographicGrid();
+        this.createVectorParticles();
     }
     
-    createNodes() {
-        // Density: "Sparse but intentional"
-        // Reduced count to ensure calm, instrument-grade atmosphere
-        // Density: "Sparse but intentional"
-        // Reduced count to ensure calm, instrument-grade atmosphere
-        const nodeCount = Math.min(100, Math.floor(this.width / 8));
-        this.nodes = [];
-        
-        for (let i = 0; i < nodeCount; i++) {
-            this.nodes.push({
-                x: Math.random() * this.width,
-                y: Math.random() * this.height,
-                z: Math.random() * 2 + 0.5, // Depth Z-Index
-                size: Math.random() * 1.5,
-                baseAlpha: Math.random() * 0.4 + 0.2, // Lower opacity for subtlety
-                pulseSpeed: Math.random() * 0.02 + 0.005, // Very slow pulse
-                pulseOffset: Math.random() * Math.PI * 2
+    createTopographicGrid() {
+        // High-Precision 3D Contour Wireframe Surface
+        const cols = 36;
+        const rows = 24;
+        const spacingX = (this.width * 1.6) / cols;
+        const spacingY = (this.height * 1.6) / rows;
+        this.gridPoints = [];
+
+        for (let r = 0; r <= rows; r++) {
+            const rowPoints = [];
+            for (let c = 0; c <= cols; c++) {
+                rowPoints.push({
+                    x3d: (c * spacingX) - (this.width * 0.8),
+                    y3d: (r * spacingY) - (this.height * 0.8),
+                    z3d: 0,
+                    c: c,
+                    r: r
+                });
+            }
+            this.gridPoints.push(rowPoints);
+        }
+    }
+    
+    createVectorParticles() {
+        // Vector Field Data Stream Particles
+        const count = Math.min(95, Math.floor(this.width / 14));
+        this.particles = [];
+
+        const colors = [
+            'rgba(6, 182, 212, ',   // Ice Cyan (#06b6d4)
+            'rgba(8, 145, 178, ',   // Deep Cyan (#0891b2)
+            'rgba(56, 189, 248, '   // Sky Ice (#38bdf8)
+        ];
+
+        for (let i = 0; i < count; i++) {
+            this.particles.push({
+                x3d: (Math.random() - 0.5) * this.width * 1.5,
+                y3d: (Math.random() - 0.5) * this.height * 1.5,
+                speed: Math.random() * 0.8 + 0.4,
+                size: Math.random() * 1.3 + 0.7,
+                colorPrefix: colors[Math.floor(Math.random() * colors.length)],
+                baseAlpha: Math.random() * 0.35 + 0.25,
+                life: Math.random() * 200 + 100
             });
         }
+    }
+
+    // Mathematical Manifold Height Function Z(x, y, t)
+    getManifoldHeight(x3d, y3d, time) {
+        const freq1 = 0.0020;
+        const freq2 = 0.0018;
+        const w1 = Math.sin(x3d * freq1 + time * 0.4) * Math.cos(y3d * freq1 + time * 0.3) * 45;
+        const w2 = Math.cos(x3d * freq2 - y3d * freq2 + time * 0.25) * 28;
+        return w1 + w2;
+    }
+
+    project3D(x3d, y3d, z3d, parallaxY) {
+        const perspective = 950;
+        const cameraDistance = 750;
+
+        const cosY = Math.cos(this.camRotY);
+        const sinY = Math.sin(this.camRotY);
+        const cosX = Math.cos(this.camRotX);
+        const sinX = Math.sin(this.camRotX);
+
+        // Yaw Y
+        let rx = x3d * cosY - z3d * sinY;
+        let rz1 = x3d * sinY + z3d * cosY;
+
+        // Pitch X
+        let ry = y3d * cosX - rz1 * sinX;
+        let rzFinal = y3d * sinX + rz1 * cosX + cameraDistance;
+
+        const scale = perspective / Math.max(100, rzFinal);
+        const screenX = (this.width / 2) + (rx * scale);
+        const screenY = (this.height / 2) + ((ry + parallaxY) * scale);
+
+        return { screenX, screenY, scale, rzFinal, rx, ry };
     }
     
     animate() {
         if (!this.ctx) return;
 
         this.ctx.clearRect(0, 0, this.width, this.height);
-        
         const time = Date.now() * 0.001;
-        
-        // Motion: Primary is Autonomous Drift.
-        // User influence is <= 20% (extremely subtle).
+        const parallaxY = -this.scrollY * 0.10;
 
-        const parallaxY = -this.scrollY * 0.15; // Reduced vertical parallax
-        // Damped user influence
-        const mouseParallaxX = (this.mouseX - this.width / 2) * 0.005;
-        const mouseParallaxY = (this.mouseY - this.height / 2) * 0.005;
+        // Smooth Apple Physical Damping Inertia (Ease 0.045)
+        this.mouseX += (this.targetMouseX - this.mouseX) * 0.045;
+        this.mouseY += (this.targetMouseY - this.mouseY) * 0.045;
 
-        this.nodes.forEach(node => {
-            // Autonomous Drift: Constant, slow, predictable.
-            // Direction: Positive X (Left to Right) to suggest forward flow/data stream.
-            node.x += 0.08 * node.z;
-            
-            // Calculate Render Position
-            let x = node.x - mouseParallaxX * node.z;
-            let y = node.y + (parallaxY * node.z) - (mouseParallaxY * node.z);
-            
-            // Infinite Field Wrapping
-            
-            // X Wrap
-            const virtualX = (x % this.width);
-            const actualX = virtualX < 0 ? virtualX + this.width : virtualX;
+        // Convert mouse screen pos to 3D center offset
+        const mouse3DX = (this.mouseX - this.width / 2) * 1.2;
+        const mouse3DY = (this.mouseY - this.height / 2) * 1.2;
 
-            // Y Wrap
-            const virtualY = (y % this.height);
-            const actualY = virtualY < 0 ? virtualY + this.height : virtualY;
-            
-            // Render Signal Node
+        // 1. Calculate & Project 3D Topographic Manifold Surface
+        const projectedGrid = [];
+        const rows = this.gridPoints.length;
+        const cols = this.gridPoints[0].length;
+
+        for (let r = 0; r < rows; r++) {
+            const projRow = [];
+            for (let c = 0; c < cols; c++) {
+                const pt = this.gridPoints[r][c];
+
+                // Procedural Loss Function Elevation
+                let z = this.getManifoldHeight(pt.x3d, pt.y3d, time);
+
+                // Localized Gravitational Mouse Perturbation (Soft Gaussian)
+                const distToMouse = Math.hypot(pt.x3d - mouse3DX, pt.y3d - mouse3DY);
+                const mousePerturb = Math.exp(-(distToMouse * distToMouse) / (2 * 180 * 180)) * -32;
+                z += mousePerturb;
+
+                const proj = this.project3D(pt.x3d, pt.y3d, z, parallaxY);
+                projRow.push(proj);
+            }
+            projectedGrid.push(projRow);
+        }
+
+        // 2. Render Topographic Wireframe Contour Lines
+        this.ctx.lineWidth = 0.70;
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                const p = projectedGrid[r][c];
+
+                // Depth Fog Attenuation Dissolving into Light Background
+                const depthFog = Math.max(0.01, Math.min(0.20, (1 - p.rzFinal / 1550) * 0.22));
+
+                // Horizontal Contour Line
+                if (c < cols - 1) {
+                    const pr = projectedGrid[r][c + 1];
+                    this.ctx.strokeStyle = `rgba(56, 189, 248, ${depthFog})`;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(p.screenX, p.screenY);
+                    this.ctx.lineTo(pr.screenX, pr.screenY);
+                    this.ctx.stroke();
+                }
+
+                // Vertical Contour Line
+                if (r < rows - 1) {
+                    const pd = projectedGrid[r + 1][c];
+                    this.ctx.strokeStyle = `rgba(8, 145, 178, ${depthFog * 0.85})`;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(p.screenX, p.screenY);
+                    this.ctx.lineTo(pd.screenX, pd.screenY);
+                    this.ctx.stroke();
+                }
+            }
+        }
+
+        // 3. Render Dynamic Vector Field Data Stream Particles
+        for (let i = 0; i < this.particles.length; i++) {
+            const p = this.particles[i];
+
+            // Calculate gradient flow along manifold surface
+            const hCenter = this.getManifoldHeight(p.x3d, p.y3d, time);
+            const hRight  = this.getManifoldHeight(p.x3d + 10, p.y3d, time);
+            const hDown   = this.getManifoldHeight(p.x3d, p.y3d + 10, time);
+
+            const dx = (hRight - hCenter) * 0.05;
+            const dy = (hDown - hCenter) * 0.05;
+
+            // Stream velocity along contour orthogonal gradient
+            p.x3d += (1.2 - dy) * p.speed;
+            p.y3d += (0.4 + dx) * p.speed;
+
+            if (p.x3d > this.width * 0.8) p.x3d = -this.width * 0.8;
+            if (p.y3d > this.height * 0.8) p.y3d = -this.height * 0.8;
+
+            const pZ = hCenter + 12; // Float slightly above surface
+            const proj = this.project3D(p.x3d, p.y3d, pZ, parallaxY);
+
+            const alpha = Math.max(0.05, Math.min(0.55, p.baseAlpha * (proj.scale * 0.85)));
+
             this.ctx.beginPath();
-            
-            // Pulse: Slow, rhythmic signal variation
-            const pulse = Math.sin(time + node.pulseOffset);
-            const opacity = node.baseAlpha + (pulse * 0.1);
-            const finalOpacity = Math.max(0.05, Math.min(0.8, opacity));
-
-            this.ctx.fillStyle = `rgba(255, 255, 255, ${finalOpacity})`;
-            this.ctx.arc(actualX, actualY, node.size * Math.max(0.5, node.z * 0.4), 0, Math.PI * 2);
+            this.ctx.fillStyle = p.colorPrefix + alpha + ')';
+            this.ctx.arc(proj.screenX, proj.screenY, Math.max(0.5, p.size * proj.scale), 0, Math.PI * 2);
             this.ctx.fill();
-        });
-        
+        }
+
         requestAnimationFrame(() => this.animate());
     }
 }
@@ -419,223 +537,116 @@ class Navigation {
     }
 }
 
-// ============================================
-// TILT EFFECT
-// ============================================
-class TiltEffect {
-    constructor() {
-        this.init();
-    }
-    
-    init() {
-        document.querySelectorAll('[data-tilt]').forEach(el => {
-            el.addEventListener('mousemove', (e) => {
-                const rect = el.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                const rotateX = (y - centerY) / 20;
-                const rotateY = (centerX - x) / 20;
-                
-                el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
-            });
-            
-            el.addEventListener('mouseleave', () => {
-                el.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
-            });
-        });
-    }
-}
 
 // ============================================
-// QUIZ SYSTEM
+// EXECUTIVE TECHNOLOGY MATRIX
 // ============================================
-
-
-// ============================================
-// SKILL NODES INTERACTION
-// ============================================
-class SkillNodes {
-    constructor() {
-        this.init();
-    }
-    
-    init() {
-        document.querySelectorAll('.skill-node').forEach(node => {
-            node.addEventListener('click', () => {
-                const skill = node.dataset.skill;
-                if (!State.explored.has(`skill-${skill}`)) {
-                    State.explored.add(`skill-${skill}`);
-                }
-            });
-        });
-    }
-}
-
-// ============================================
-// PROJECT CARDS INTERACTION
-// ============================================
-class ProjectCards {
-    constructor() {
-        this.init();
-    }
-    
-    init() {
-        document.querySelectorAll('.project-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const project = card.dataset.project;
-                if (!State.explored.has(`project-${project}`)) {
-                    State.explored.add(`project-${project}`);
-                }
-            });
-        });
-    }
-}
-
-// ============================================
-// NEURAL BENTO INTERFACE (TACTICAL V3)
-// ============================================
-// ============================================
-// NEURAL DIAGNOSTIC ANALYZER V4
-// ============================================
-// ============================================
-// NEURAL DIAGNOSTIC ARCHITECT V8
-// ============================================
-class NeuralArchitect {
+class TechSkillsMatrix {
     constructor() {
         this.container = document.getElementById('bento-grid');
-        this.svgLayer = document.getElementById('synapse-layer');
-        this.overlay = document.getElementById('diagnostic-overlay');
-        this.visitedNodes = new Set(); // Gamification State
-        
-        if (!this.container || !this.overlay) return;
+        if (!this.container) return;
 
-        // V8 Knowledge Graph (Source of Truth)
-        // V10 OMNI-CONNECTED JSON (Source Truth)
+        // Domain Competency Architecture
         this.data = {
             "DATA": {
-                "label": "DATA SCIENCE / ENG",
-                "color": "#06b6d4",
+                "label": "AI & Statistical Machine Learning",
+                "color": "#0891b2",
                 "nodes": [
                     {
                         "id": "python", 
-                        "name": "Python Core", 
-                        "mastery": "95%", 
-                        "sync": ["numpy", "torch", "transformer"], 
-                        "desc": "The universal runtime. AsyncIO, Multiprocessing, & API orchestration."
+                        "name": "Python Core Architecture", 
+                        "tags": ["AsyncIO", "Multiprocessing", "OOP Engineering"], 
+                        "desc": "High-throughput runtime design. Concurrent async execution pipelines, object-oriented system design, and performant C-extension integration."
                     },
                     {
                         "id": "numpy", 
-                        "name": "NumPy & Pandas", 
-                        "mastery": "94%", 
-                        "sync": ["stats", "scikit", "torch"], 
-                        "desc": "Vectorized operations, Linear Algebra (Dot Products), and Tensor manipulation."
+                        "name": "NumPy & Scientific Stack", 
+                        "tags": ["Vectorization", "Linear Algebra", "Tensor Math"], 
+                        "desc": "Vectorized linear algebra algorithms, multi-dimensional array manipulation, and memory-efficient matrix operations."
                     },
                     {
                         "id": "stats", 
-                        "name": "Statistics & Math", 
-                        "mastery": "92%", 
-                        "sync": ["reg_class", "viz", "scikit"], 
-                        "desc": "Bayesian Inference, Hypothesis Testing (A/B), and Distribution Analysis."
+                        "name": "Statistical Inference & Math", 
+                        "tags": ["Bayesian Inference", "A/B Testing", "Distribution Modeling"], 
+                        "desc": "Rigorous statistical modeling, hypothesis testing, confidence interval estimation, and parameter optimization in high-dimensional feature spaces."
                     },
                     {
-                        "id": "sql_etl", 
-                        "name": "SQL & Pipelines", 
-                        "mastery": "82%", 
-                        "sync": ["storage", "rag"], 
-                        "desc": "Complex CTEs, dbt transformations, and Airflow DAG orchestration."
+                        "id": "scikit", 
+                        "name": "Scikit-Learn & Classical ML", 
+                        "tags": ["Ensembles", "Cross-Validation", "Dimensionality Reduction"], 
+                        "desc": "Production estimator pipelines, automated feature scaling, PCA/t-SNE dimensionality reduction, and robust validation strategies."
                     },
                     {
-                        "id": "viz", 
-                        "name": "Data Visualization & BI", 
-                        "mastery": "89%", 
-                        "sync": ["stats", "prompt"], 
-                        "desc": "Diagnostic plotting (Plotly) and dimensionality reduction viz (t-SNE/UMAP)."
+                        "id": "xgboost", 
+                        "name": "XGBoost & Gradient Boosting", 
+                        "tags": ["Tabular Modeling", "SHAP Explainability", "Optuna HPO"], 
+                        "desc": "Gradient boosted decision trees optimized for large-scale structured tabular datasets, integrated with SHAP feature interpretability."
                     }
                 ]
             },
             "ML": {
-                "label": "PREDICTIVE ML",
-                "color": "#8b5cf6",
+                "label": "Generative AI & Deep Learning",
+                "color": "#7c3aed",
                 "nodes": [
                     {
-                        "id": "reg_class", 
-                        "name": "Regress / Classify", 
-                        "mastery": "91%", 
-                        "sync": ["scikit", "xgboost", "stats"], 
-                        "desc": "GLMs, Logistic Regression, Decision Boundaries, and Loss Function optimization."
-                    },
-                    {
-                        "id": "scikit", 
-                        "name": "Scikit-Learn", 
-                        "mastery": "93%", 
-                        "sync": ["numpy", "reg_class", "deploy"], 
-                        "desc": "Pipeline composition, Feature Selection, and Cross-Validation strategies."
-                    },
-                    {
-                        "id": "xgboost", 
-                        "name": "XGBoost / LGBM", 
-                        "mastery": "88%", 
-                        "sync": ["reg_class", "deploy"], 
-                        "desc": "Gradient Boosting on Decision Trees. SOTA for structured tabular data."
-                    },
-                    {
                         "id": "torch", 
-                        "name": "PyTorch / Deep Learning", 
-                        "mastery": "87%", 
-                        "sync": ["numpy", "transformer", "diffusion"], 
-                        "desc": "Neural Architecture Search, Backprop, and Custom Layers (CNN/RNN)."
+                        "name": "PyTorch & Deep Learning", 
+                        "tags": ["Custom Layers", "Autograd", "DDP Distributed"], 
+                        "desc": "Neural network architecture design, automatic differentiation, custom CUDA operator optimization, and Distributed Data Parallel (DDP) training."
                     },
                     {
-                        "id": "deploy", 
-                        "name": "MLOps & Docker", 
-                        "mastery": "79%", 
-                        "sync": ["api", "python"], 
-                        "desc": "Containerization, ONNX Runtime, and Model Registry management."
+                        "id": "transformer", 
+                        "name": "Transformers & Fine-Tuning", 
+                        "tags": ["LoRA / QLoRA", "PEFT", "FlashAttention"], 
+                        "desc": "Encoder-Decoder transformer models, parameter-efficient fine-tuning (PEFT), and GGUF/AWQ quantization deployment pipelines."
+                    },
+                    {
+                        "id": "rag", 
+                        "name": "Enterprise RAG Architecture", 
+                        "tags": ["Hybrid Search", "Cross-Encoders", "Query Compression"], 
+                        "desc": "Production Retrieval-Augmented Generation using semantic chunking, dense-sparse hybrid vector search, and multi-stage reranking."
+                    },
+                    {
+                        "id": "prompt", 
+                        "name": "Agentic AI & LangGraph", 
+                        "tags": ["Tool Invocation", "ReAct Loops", "State Machines"], 
+                        "desc": "Autonomous multi-agent workflows, stateful execution graphs, deterministic fallback strategies, and tool orchestration."
+                    },
+                    {
+                        "id": "vector", 
+                        "name": "Vector Stores & Embeddings", 
+                        "tags": ["Qdrant", "Pinecone", "HNSW Indexing"], 
+                        "desc": "High-dimensional vector indexing, HNSW similarity graph optimization, and low-latency payload filtering."
                     }
                 ]
             },
             "GENAI": {
-                "label": "GENERATIVE AI",
-                "color": "#f43f5e",
+                "label": "Data Engineering & MLOps Infrastructure",
+                "color": "#2563eb",
                 "nodes": [
                     {
-                        "id": "transformer", 
-                        "name": "LLM Architecture", 
-                        "mastery": "90%", 
-                        "sync": ["torch", "python", "prompt"], 
-                        "desc": "Attention mechanisms, Quantization (GGUF), and Fine-tuning (QLoRA)."
-                    },
-                    {
-                        "id": "rag", 
-                        "name": "RAG Systems", 
-                        "mastery": "92%", 
-                        "sync": ["vector", "sql_etl"], 
-                        "desc": "Retrieval-Augmented Generation. Hybrid Search & Context Reranking."
-                    },
-                    {
-                        "id": "prompt", 
-                        "name": "Agents & Tooling", 
-                        "mastery": "94%", 
-                        "sync": ["python", "api"], 
-                        "desc": "Agentic workflows (LangGraph). Tool calling and ReAct loops."
-                    },
-                    {
-                        "id": "vector", 
-                        "name": "Vector DBs", 
-                        "mastery": "85%", 
-                        "sync": ["storage", "rag"], 
-                        "desc": "Semantic Indexing (Pinecone/Milvus) & High-dim embeddings."
+                        "id": "sql_etl", 
+                        "name": "SQL & Polars Data Pipelines", 
+                        "tags": ["Polars ETL", "Complex CTEs", "Apache Arrow"], 
+                        "desc": "Vectorized Polars DataFrames and analytical SQL transformations for multi-gigabyte in-memory data processing."
                     },
                     {
                         "id": "api", 
-                        "name": "Inference APIs", 
-                        "mastery": "86%", 
-                        "sync": ["deploy", "python"], 
-                        "desc": "High-throughput serving (vLLM) and FastAPI gateway integration."
+                        "name": "High-Throughput Serving & APIs", 
+                        "tags": ["FastAPI", "vLLM", "Pydantic v2"], 
+                        "desc": "Asynchronous REST microservices, Pydantic data validation, continuous batching with vLLM, and OpenAPI specs."
+                    },
+                    {
+                        "id": "deploy", 
+                        "name": "MLOps, Docker & CI/CD", 
+                        "tags": ["Docker", "MLflow", "GitHub Actions"], 
+                        "desc": "Multi-stage containerization, automated model artifact versioning with MLflow, and automated CI/CD deployment pipelines."
+                    },
+                    {
+                        "id": "observability", 
+                        "name": "Observability & Model Monitoring", 
+                        "tags": ["Evidently AI", "Telemetry", "Data Quality"], 
+                        "desc": "Continuous production data drift detection, feature distribution monitoring, automated assertions, and telemetry."
                     }
                 ]
             }
@@ -646,16 +657,52 @@ class NeuralArchitect {
 
     init() {
         this.renderGrid();
-        this.setupOverlay();
-        
-        // Wait for layout to stabilize for SVG drawing
-        setTimeout(() => this.drawAllSynapses(), 500);
-        
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-             clearTimeout(resizeTimer);
-             resizeTimer = setTimeout(() => this.drawAllSynapses(), 200);
-        });
+        this.setupSearchFilter();
+    }
+
+    setupSearchFilter() {
+        const searchInput = document.getElementById('skill-search-input');
+        const clearBtn = document.getElementById('skill-search-clear');
+        const searchWrapper = document.querySelector('.skills-search-wrapper');
+
+        if (!searchInput) return;
+
+        const handleFilter = (query) => {
+            const trimmed = query.trim().toLowerCase();
+            const cards = document.querySelectorAll('.tech-skill-card');
+
+            if (trimmed === '') {
+                if (searchWrapper) searchWrapper.classList.remove('has-value');
+                cards.forEach(c => c.classList.remove('search-matched', 'dimmed'));
+                return;
+            }
+
+            if (searchWrapper) searchWrapper.classList.add('has-value');
+
+            cards.forEach(c => {
+                const name = (c.dataset.name || '').toLowerCase();
+                const desc = (c.dataset.desc || '').toLowerCase();
+                const tags = (c.dataset.tags || '').toLowerCase();
+
+                if (name.includes(trimmed) || desc.includes(trimmed) || tags.includes(trimmed)) {
+                    c.classList.add('search-matched');
+                    c.classList.remove('dimmed');
+                } else {
+                    c.classList.remove('search-matched');
+                    c.classList.add('dimmed');
+                }
+            });
+        };
+
+        searchInput.addEventListener('input', (e) => handleFilter(e.target.value));
+
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                handleFilter('');
+                searchInput.focus();
+            });
+        }
     }
 
     renderGrid() {
@@ -666,26 +713,30 @@ class NeuralArchitect {
             const col = document.createElement('div');
             col.className = 'sector-column';
             
-            const nodesHtml = group.nodes.map(node => `
-                <div class="neural-node" 
-                     id="node-${node.id}"
-                     data-id="${node.id}" 
-                     data-name="${node.name}"
-                     data-mastery="${node.mastery}"
-                     data-sync='${JSON.stringify(node.sync)}'>
-                    <div class="node-header">
-                        <span class="node-name">${node.name}</span>
-                        <i class="fa-solid fa-code-branch node-icon"></i>
+            const nodesHtml = group.nodes.map(node => {
+                const tagsHtml = node.tags.map(t => `<span class="competency-tag">${t}</span>`).join('');
+                return `
+                    <div class="tech-skill-card" 
+                         id="node-${node.id}"
+                         data-id="${node.id}" 
+                         data-name="${node.name}"
+                         data-desc="${node.desc}"
+                         data-tags="${node.tags.join(', ')}">
+                        <div class="card-header">
+                            <h4 class="skill-name">${node.name}</h4>
+                            <span class="skill-indicator"></span>
+                        </div>
+                        <p class="skill-desc">${node.desc}</p>
+                        <div class="skill-tags">
+                            ${tagsHtml}
+                        </div>
                     </div>
-                    <div class="node-mastery-track">
-                        <div class="node-mastery-bar" data-width="${parseInt(node.mastery)}"></div>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
 
             col.innerHTML = `
                 <div class="sector-header">
-                    <span class="sector-title">// ${group.label}</span>
+                    <h3 class="sector-title">${group.label}</h3>
                 </div>
                 <div class="sector-body">
                     ${nodesHtml}
@@ -694,289 +745,6 @@ class NeuralArchitect {
             
             this.container.appendChild(col);
         });
-
-        this.animateEntrance();
-        this.setupInteractions();
-    }
-
-    animateEntrance() {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const bars = entry.target.querySelectorAll('.node-mastery-bar');
-                    bars.forEach((bar, i) => {
-                        setTimeout(() => {
-                            bar.style.width = bar.dataset.width + '%';
-                        }, i * 50);
-                    });
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.2 });
-
-        document.querySelectorAll('.sector-column').forEach(col => observer.observe(col));
-    }
-
-    // V12 Core: Dual-Layer "Maglev" Connection Architecture
-    drawAllSynapses() {
-        if (!this.svgLayer) return;
-        
-        // Clear
-        while (this.svgLayer.firstChild) {
-            this.svgLayer.removeChild(this.svgLayer.firstChild);
-        }
-
-        // Create Definitions for Gradients
-        if (!document.getElementById('synapse-gradient')) {
-            const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
-            defs.innerHTML = `
-                <linearGradient id="synapse-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" style="stop-color:var(--c-signal);stop-opacity:0" />
-                    <stop offset="50%" style="stop-color:#ffffff;stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:var(--c-signal);stop-opacity:0" />
-                </linearGradient>
-            `;
-            this.svgLayer.appendChild(defs);
-        }
-
-        const containerRect = this.container.getBoundingClientRect();
-        const nodes = Array.from(document.querySelectorAll('.neural-node'));
-        const nodeMap = new Map();
-        
-        nodes.forEach(node => {
-            nodeMap.set(node.dataset.id, node);
-        });
-
-        nodes.forEach(sourceNode => {
-            const sourceId = sourceNode.dataset.id;
-            const syncs = JSON.parse(sourceNode.dataset.sync);
-            
-            const sourceRect = sourceNode.getBoundingClientRect();
-            // Start from right center
-            const startX = sourceRect.right - containerRect.left;
-            const startY = sourceRect.top + sourceRect.height / 2 - containerRect.top;
-
-            syncs.forEach(targetId => {
-                const targetNode = nodeMap.get(targetId);
-                if (targetNode) {
-                    const targetRect = targetNode.getBoundingClientRect();
-                    
-                    let endX, endY, c1x, c1y, c2x, c2y;
-                    
-                    // Logic: Omni-Connection (Adaptive Tension)
-                    if (targetRect.left > sourceRect.right) {
-                        // Forward Flow
-                        endX = targetRect.left - containerRect.left;
-                        endY = targetRect.top + targetRect.height / 2 - containerRect.top;
-                        
-                        // Adaptive curvature based on distance
-                        const dist = endX - startX;
-                        const tension = dist * 0.55; 
-
-                        c1x = startX + tension;
-                        c1y = startY;
-                        c2x = endX - tension;
-                        c2y = endY;
-                    } else {
-                        // Loopback / Same Column
-                        endX = targetRect.right - containerRect.left;
-                        endY = targetRect.top + targetRect.height / 2 - containerRect.top;
-                        
-                        const loopDist = 60; 
-                        c1x = startX + loopDist;
-                        c1y = startY;
-                        c2x = endX + loopDist;
-                        c2y = endY;
-                    }
-
-                    const d = `M ${startX} ${startY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${endX} ${endY}`;
-
-                    // UNIFIED PATH: Handles both rail structure and energy pulse
-                    // Optimized: Single DOM node per connection instead of two
-                    const synapse = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                    synapse.setAttribute('d', d);
-                    synapse.setAttribute('class', 'synapse-link'); // Unified class
-                    synapse.setAttribute('data-source', sourceId);
-                    synapse.setAttribute('data-target', targetId);
-                    
-                    this.svgLayer.appendChild(synapse);
-                }
-            });
-        });
-    }
-
-    setupInteractions() {
-        const nodes = document.querySelectorAll('.neural-node');
-        const termTitle = document.querySelector('.bar-title');
-        
-        // Update Terminal Ready State
-        if (termTitle) termTitle.textContent = "> KERNEL CONNECTED. WAITING FOR INPUT...";
-
-        nodes.forEach(node => {
-            // HOVER
-            node.addEventListener('mouseenter', () => {
-                const myId = node.dataset.id;
-                const myName = node.dataset.name;
-
-                // Terminal Update
-                if (termTitle) {
-                    termTitle.textContent = `> DETECTING SYNAPTIC LINKAGES: [${myName.toUpperCase()}]...`;
-                    termTitle.style.color = 'var(--c-signal)';
-                }
-                
-                // 1. Highlight Nodes (Omni-Glow)
-                const downstream = JSON.parse(node.dataset.sync);
-                const upstream = [];
-                
-                nodes.forEach(n => {
-                    const nSync = JSON.parse(n.dataset.sync);
-                    if (nSync.includes(myId)) upstream.push(n.dataset.id);
-                });
-                
-                const activeIds = new Set([myId, ...downstream, ...upstream]);
-                
-                nodes.forEach(n => {
-                    if (activeIds.has(n.dataset.id)) {
-                        n.classList.remove('dimmed');
-                        n.classList.add('active-link');
-                        // Custom Glow for Connected Nodes
-                        if (n.dataset.id !== myId) {
-                            n.style.borderColor = 'white';
-                            n.style.boxShadow = '0 0 15px rgba(255,255,255,0.5)';
-                        }
-                    } else {
-                        n.classList.add('dimmed');
-                        n.classList.remove('active-link');
-                        n.style.borderColor = '';
-                        n.style.boxShadow = '';
-                    }
-                });
-
-                // 2. Highlight Synapses (Unified Layer)
-                const synapses = this.svgLayer.querySelectorAll('.synapse-link');
-                
-                // Helper to toggle
-                const toggle = (el) => {
-                    const s = el.getAttribute('data-source');
-                    const t = el.getAttribute('data-target');
-                    if (s === myId || t === myId) el.classList.add('active');
-                    else el.classList.remove('active');
-                };
-
-                synapses.forEach(toggle);
-            });
-
-            node.addEventListener('mouseleave', () => {
-                // Reset Terminal
-                if (termTitle) {
-                    termTitle.textContent = "> KERNEL CONNECTED. WAITING FOR INPUT...";
-                    termTitle.style.color = '';
-                }
-
-                nodes.forEach(n => {
-                    n.classList.remove('dimmed', 'active-link');
-                    // Reset inline styles
-                    n.style.borderColor = '';
-                    n.style.boxShadow = '';
-                });
-                
-                // Deactivate all paths
-                this.svgLayer.querySelectorAll('.synapse-link').forEach(el => {
-                    el.classList.remove('active');
-                });
-            });
-
-            // CLICK
-            node.addEventListener('click', () => {
-                this.openDiagnostic(node.dataset.id);
-            });
-        });
-    }
-
-    setupOverlay() {
-        const closeBtn = document.querySelector('.diag-close');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                this.overlay.classList.remove('active');
-            });
-        }
-        
-        this.overlay.addEventListener('click', (e) => {
-             if (e.target === this.overlay) this.overlay.classList.remove('active');
-        });
-    }
-
-    findData(id) {
-        for (const key in this.data) {
-            const found = this.data[key].nodes.find(n => n.id === id);
-            if (found) return found;
-        }
-        return null;
-    }
-
-    openDiagnostic(id) {
-        const node = this.findData(id);
-        if (!node) return;
-
-        // Track visited nodes
-        if (!this.visitedNodes.has(id)) {
-            this.visitedNodes.add(id);
-        }
-
-        const titleEl = document.querySelector('.diag-title');
-        const descEl = document.getElementById('diag-desc-target');
-        const specsContainer = document.getElementById('diag-specs');
-        
-        if (!titleEl || !descEl || !specsContainer) return;
-        
-        titleEl.textContent = `DIAGNOSTIC // ${node.name.toUpperCase()}`;
-        descEl.textContent = ""; 
-        
-        specsContainer.innerHTML = `
-            <div class="spec-item">
-                <span class="spec-label">MASTERY</span>
-                <span>${node.mastery}</span>
-            </div>
-            <div class="spec-item">
-                <span class="spec-label">ACTIVE SYNAPSES</span>
-                <span>${node.sync.length} Omni-Link</span>
-            </div>
-            <div class="spec-item">
-                <span class="spec-label">INTEGRITY</span>
-                <span>Verified 100%</span>
-            </div>
-            <div class="spec-item">
-                <span class="spec-label">STATUS</span>
-                <span style="color:var(--c-signal)">OPERATIONAL</span>
-            </div>
-        `;
-        
-        this.overlay.classList.add('active');
-        
-        if (this.decryptInterval) clearInterval(this.decryptInterval);
-        this.decryptText(descEl, node.desc);
-    }
-
-    decryptText(element, originalText) {
-        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&@";
-        let iterations = 0;
-        const totalDuration = 600; // ms
-        const steps = originalText.length;
-        const speed = totalDuration / steps + 5; 
-
-        this.decryptInterval = setInterval(() => {
-            element.innerText = originalText.split("")
-                .map((letter, index) => {
-                    if (index < iterations) {
-                        return originalText[index];
-                    }
-                    return chars[Math.floor(Math.random() * chars.length)];
-                })
-                .join("");
-            
-            if (iterations >= originalText.length) clearInterval(this.decryptInterval);
-            iterations += 1; 
-        }, 20); // Fixed tick
     }
 }
 
@@ -1087,13 +855,10 @@ document.addEventListener('DOMContentLoaded', () => {
     new ScrollAnimations();
     new CounterAnimation();
     new Navigation();
-    new TiltEffect();
-    new SkillNodes();
-    new ProjectCards();
     
-    // Initialize Neural Architect V6
-    new NeuralArchitect();
-    new KineticStream(); // V2.0 Deployment Stream
+    // Initialize Technical Skills Matrix & Projects Grid
+    new TechSkillsMatrix();
+    new KineticStream(); // Executive Projects Grid
     new RomeClock(); // Rome timezone clock & date ticker
     // ExecutiveScheduler initialization moved to contact-system.js
 

@@ -14,12 +14,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/code-saver" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <!-- Styles -->
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/arsenal-3d.css">
     
     <script type="application/ld+json">
     {
@@ -60,7 +57,6 @@
                 </div>
                 <div class="brand-text">
                     <span class="brand-name">RENALDO ARAPI</span>
-                    <span class="brand-domain">.AI</span>
                 </div>
             </a>
             
@@ -76,7 +72,7 @@
             <div class="nav-meta">
                 <div class="system-status">
                     <span class="pulse-dot"></span>
-                    <span class="status-label">Neural Link Active</span>
+                    <span class="status-label">System Status: Online</span>
                 </div>
             </div>
         </nav>
@@ -91,7 +87,7 @@
             <div class="hero-content">
                 <div class="hero-badge" data-reveal>
                     <span class="badge-pulse"></span>
-                    <span class="badge-label">Data Scientist & ML Engineer</span>
+                    <span class="badge-label">Principal Data Scientist & ML Architect</span>
                 </div>
                 
                 <h1 class="hero-title" data-reveal>
@@ -101,15 +97,12 @@
                 </h1>
                 
                 <p class="hero-lead" data-reveal>
-                    I engineer systems that translate data into <em>decision intelligence</em>. <br><br>
-                    This portfolio is a living demonstration of <strong>AI driven development</strong>. 
-                    Built exclusively through agile prompting and orchestration, it showcases the power of 
-                    iterative refinement transforming intent into a premium digital experience.
+                    Engineering production systems that translate high-dimensional data into strategic decision intelligence.
                 </p>
                 
                 <div class="hero-actions" data-reveal>
                     <a href="#projects" class="btn btn-plasma">
-                        <span class="btn-text">View Projects</span>
+                        <span class="btn-text">View Case Studies</span>
                         <span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span>
                         <span class="btn-shine"></span>
                     </a>
@@ -202,11 +195,11 @@
                 <div class="section-header center" data-reveal>
                     <div class="section-tag">
                         <span class="tag-line"></span>
-                        <span>The Architect</span>
+                        <span>Academic Foundation</span>
                     </div>
                     <h2 class="section-title">
-                        Beyond Algorithms—<br>
-                        <span class="gradient-text">Strategic Intelligence</span>
+                        Statistical Rigor &<br>
+                        <span class="gradient-text">Decision Intelligence</span>
                     </h2>
                 </div>
 
@@ -214,7 +207,6 @@
                     <div class="about-visual" data-parallax>
                         <div class="visual-frame">
                             <img src="assets/scienziato-pazzo.jpg" alt="Renaldo" class="profile-image">
-                            <div class="frame-scan"></div>
                             <div class="frame-corners">
                                 <span></span><span></span><span></span><span></span>
                             </div>
@@ -259,76 +251,58 @@
             </div>
         </section>
 
-        <!-- PROJECTS / DEPLOYMENTS -->
-        <!-- === SECTION 3: PROJECTS (Kinetic Stream V2.0) === -->
-        <section class="section kinetic-stream-container" id="projects">
-            <div class="container-fluid"> <!-- Full Width for Stream -->
+        <!-- PROJECTS / CASE STUDIES -->
+        <!-- === SECTION 3: PROJECTS (Executive Case Studies Grid) === -->
+        <section class="section projects-section" id="projects">
+            <div class="container">
                 <div class="section-header center" data-reveal>
                     <div class="section-tag">
                         <span class="tag-line"></span>
-                        <span>Selected Work</span>
+                        <span>Selected Production Architecture</span>
                     </div>
-                    <h2 class="section-title">Projects</h2>
+                    <h2 class="section-title">Featured Engineering Systems</h2>
                 </div>
 
-                <!-- Navigation HUD (Floating) -->
-                <div class="stream-nav-hud">
-                    <button class="nav-btn prev" id="stream-prev"><i class="fa-solid fa-chevron-left"></i></button>
-                    <button class="nav-btn next" id="stream-next"><i class="fa-solid fa-chevron-right"></i></button>
+                <!-- Case Study Category Filter Bar -->
+                <div class="projects-filter-bar" id="stream-filter-hud" data-reveal>
+                    <button class="filter-btn active" data-filter="all">All Systems</button>
+                    <button class="filter-btn" data-filter="AI/ML">Predictive AI & ML</button>
+                    <button class="filter-btn" data-filter="LLM">RAG & GenAI</button>
+                    <button class="filter-btn" data-filter="CV">Computer Vision</button>
+                    <button class="filter-btn" data-filter="RL">Quant & Analytics</button>
                 </div>
 
-                <!-- The Kinetic Stream Container -->
-                <div class="kinetic-stream-wrapper" id="kinetic-stream-wrapper">
-                    <div class="kinetic-stream-track" id="kinetic-stream-track">
-                        <!-- Projects injected via JS -->
-                    </div>
-                </div>
-                
-                <!-- Progress Rail -->
-                <div class="stream-progress-container">
-                    <div class="stream-progress-rail">
-                        <div class="stream-progress-bar" id="stream-progress-bar"></div>
-                    </div>
+                <!-- Executive Projects Bento Grid -->
+                <div class="projects-bento-grid" id="kinetic-stream-track">
+                    <!-- Case study cards injected via JS -->
                 </div>
             </div>
         </section>
 
-        <!-- SKILLS / TECHNICAL SKILLS -->
-        <!-- === SECTION 4: TECHNICAL SKILLS (Formerly Arsenal) === -->
+        <!-- SKILLS / TECHNICAL COMPETENCIES -->
+        <!-- === SECTION 4: TECHNICAL SKILLS (Executive Competencies Matrix) === -->
         <section class="section skills-section" id="skills">
             <div class="container">
                 <div class="section-header center" data-reveal>
                     <div class="section-tag">
                         <span class="tag-line"></span>
-                        <span>Technical Skills</span>
+                        <span>Core Technical Stack & Domain Expertise</span>
                     </div>
-                    <h2 class="section-title">Technical Skills</h2>
+                    <h2 class="section-title">Engineering Capabilities</h2>
+                </div>
+
+                <!-- Live Skill Search Bar -->
+                <div class="skills-search-container" data-reveal>
+                    <div class="skills-search-wrapper">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" id="skill-search-input" class="skill-search-input" placeholder="Search stack (e.g. PyTorch, Distributed Training, Polars, FastAPI)..." aria-label="Filter Technical Skills">
+                        <button id="skill-search-clear" class="search-clear-btn" aria-label="Clear Search"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
                 </div>
                 
-                <div class="arsenal-system" id="arsenal-system">
-                    <div class="holo-stage" id="holo-stage">
-                        <svg class="synapse-layer" id="synapse-layer" aria-hidden="true"></svg>
-                        <div class="bento-grid" id="bento-grid">
-                            <!-- Injected by NeuralAnalyzer class -->
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Full Screen Diagnostic Overlay (V6 Structure) -->
-                <div id="diagnostic-overlay" class="diagnostic-overlay" aria-hidden="true">
-                    <div class="diag-terminal">
-                        <div class="diag-header">
-                            <span class="diag-title">SYSTEM DIAGNOSTIC</span>
-                            <button class="diag-close"><i class="fa-solid fa-times"></i></button>
-                        </div>
-                        <div class="diag-content">
-                            <p class="diag-desc" id="diag-desc-target"></p>
-                            <div class="diag-scan-line"></div>
-                            <div class="tech-specs" id="diag-specs">
-                                <!-- Injected via JS -->
-                            </div>
-                        </div>
-                    </div>
+                <!-- Executive Technology Matrix Grid -->
+                <div class="tech-matrix-grid" id="bento-grid">
+                    <!-- Injected by TechSkillsMatrix class -->
                 </div>
             </div>
         </section>
@@ -447,20 +421,13 @@
         </div>
     </footer>
 
-    <!-- === ACHIEVEMENT TOAST === -->
-    <div class="achievement-toast" id="achievement-toast">
-        <div class="toast-icon"><i class="fa-solid fa-trophy"></i></div>
-        <div class="toast-content">
-            <strong id="toast-title">Achievement Unlocked</strong>
-            <span id="toast-desc">Description</span>
-        </div>
-    </div>
+
 
     <!-- === PROJECT DEEP DIVE MODAL === -->
     <div class="project-modal" id="project-modal">
         <div class="modal-backdrop" id="modal-backdrop"></div>
         <div class="modal-glass-panel">
-            <button class="modal-close" id="modal-close"><i class="fa-solid fa-xmark"></i></button>
+            <button class="modal-close" id="modal-close" aria-label="Close Case Study Modal"><i class="fa-solid fa-xmark"></i></button>
             
             <div class="modal-content-grid">
                 <!-- Visual Column -->
@@ -469,7 +436,10 @@
                     <div class="modal-icon-wrapper">
                         <i class="fa-solid fa-network-wired" id="modal-icon"></i>
                     </div>
-                    <div class="modal-status" id="modal-status">PROD_LIVE</div>
+                    <div class="modal-status" id="modal-status">
+                        <span class="status-dot"></span>
+                        <span id="modal-status-text">Production System</span>
+                    </div>
                 </div>
 
                 <!-- Data Column -->
@@ -487,11 +457,13 @@
                         Project description goes here.
                     </p>
 
-                    <a href="#" class="btn btn-plasma modal-cta">
-                        <span class="btn-text">Initialize Demo</span>
-                        <span class="btn-icon"><i class="fa-solid fa-bolt"></i></span>
-                        <span class="btn-shine"></span>
-                    </a>
+                    <div class="modal-actions">
+                        <a href="#contact" class="btn btn-plasma modal-cta" id="modal-cta-btn">
+                            <span class="btn-text">System Architecture Inquiry</span>
+                            <span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span>
+                            <span class="btn-shine"></span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

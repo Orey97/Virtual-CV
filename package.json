@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Virtual CV Portfolio with Google Calendar Integration",
   "scripts": {
-    "dev": "vite",
+    "dev": "node serve.js",
+    "serve": "node serve.js",
     "build": "node build.js",
     "preview": "vite preview",
     "deploy": "vercel --prod"
